@@ -3,6 +3,12 @@
 const functions = require('firebase-functions');
 const {WebhookClient} = require('dialogflow-fulfillment');
 const {Card, Suggestion} = require('dialogflow-fulfillment');
+//Connect Firebase
+const admin = require('firebase-admin');
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: 'https://ant-llicbp.firebaseio.com'
+});
 
 process.env.DEBUG = 'dialogflow:debug'; 
  
@@ -21,9 +27,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
+  // //Feature Register
+  // function register(agent) {
+  //   fwef
+  // }
+
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-
+  intentMap.set('..', register);
+  
   agent.handleRequest(intentMap);
 });
