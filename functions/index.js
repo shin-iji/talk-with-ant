@@ -29,8 +29,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   //Feature Register
   function register(agent) {
-    let firstName = request.body.queryResult.parameters.fName;
-    let lastName = request.body.queryResult.parameters.lName;
+    let firstName = request.body.queryResult.parameters.fName; //get first name
+    let lastName = request.body.queryResult.parameters.lName; //get last name
     let tel = request.body.queryResult.parameters.tel;
     let email = request.body.queryResult.parameters.email;
     let userId = agent.originalRequest.payload.data.source.userId;
@@ -43,14 +43,30 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         email: email
       }
     })
-    
     agent.add(`Complete`);
+  }
+
+  function listTraining(agent) {
+    let date = request.body.queryResult.parameters.date;
+
+    return db.collection('Training Courses').get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.data().date == date) {
+            agent.add(doc.id, '=>', doc.data());
+          } 
+        });
+      })
+      .catch((err) => {
+        agent.add('Error getting documents', err);
+      });
   }
 
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('..', register);
-  
+  intentMap.set('Start', listTraining);
+
   agent.handleRequest(intentMap);
 });
