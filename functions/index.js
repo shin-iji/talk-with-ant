@@ -10,6 +10,7 @@ admin.initializeApp({
   databaseURL: 'https://ant-llicbp.firebaseio.com'
 });
 let db = admin.database();
+let firestore = admin.firestore();
 
 process.env.DEBUG = 'dialogflow:debug'; 
  
@@ -19,7 +20,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
   function welcome(agent) {
-    agent.add(`Welcome ${userId} to my agent!`);
+    let userId = agent.originalRequest.payload.data.source.userId;
+    agent.add(userId);
   }
  
   function fallback(agent) {
@@ -48,18 +50,20 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   function listTraining(agent) {
     let date = request.body.queryResult.parameters.date;
+    agent.add(date);
 
-    return db.collection('Training Courses').get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          if (doc.data().date == date) {
-            agent.add(doc.id, '=>', doc.data());
-          } 
-        });
+    let trainingRef = firestore.collection('Training Courses');
+    let query = trainingRef.where('date', '==', date).get().then(snapshot => {
+
+      if (snapshot.empty) {
+        agent.add('ไม่มีการจัดอบรม');
+      }
+
+      snapshot.forEach(doc => {
+        agent.add(doc.id, '=>', doc.data());
       })
-      .catch((err) => {
-        agent.add('Error getting documents', err);
-      });
+    })
+    return query
   }
 
   let intentMap = new Map();
