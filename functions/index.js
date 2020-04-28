@@ -48,7 +48,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`Complete`);
   }
 
-  function listTraining(agent) {
+  function listTrainingByDate(agent) {
     let date = request.body.queryResult.parameters.date;
     agent.add(date);
 
@@ -70,7 +70,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('..', register);
-  intentMap.set('Start', listTraining);
+  intentMap.set('Start', listTrainingByDate);
 
   agent.handleRequest(intentMap);
 });
