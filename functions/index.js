@@ -66,11 +66,26 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     return query
   }
 
+  function listAllTraining(agent) {
+    let trainingRef = firestore.collection('Training Courses');
+    let query = trainingRef.get().then(snapshot => {
+      if (snapshot.empty) {
+        agent.add('ไม่มีการจัดอบรม');
+      }
+
+      snapshot.forEach(doc => {
+        agent.add(doc.id, '=>', doc.data());
+      })
+    })
+    return query
+  }
+
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('..', register);
   intentMap.set('Start', listTrainingByDate);
+  intentMap.set('List All Training', listAllTraining)
 
   agent.handleRequest(intentMap);
 });
