@@ -22,6 +22,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function welcome(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
     agent.add(userId);
+
   }
  
   function fallback(agent) {
@@ -29,24 +30,45 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
-  //Feature Register
-  function register(agent) {
-    let firstName = request.body.queryResult.parameters.fName; //get first name
-    let lastName = request.body.queryResult.parameters.lName; //get last name
-    let tel = request.body.queryResult.parameters.tel;
-    let email = request.body.queryResult.parameters.email;
+  function setUser(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
-
-    return db.ref('users').set({
-      userId: {
-        firstName: firstName,
-        lastName: lastName,
-        tel: tel,
-        email: email
-      }
-    })
-    agent.add(`Complete`);
+    let query = db.ref('users').child(userId).set({
+      firstName: "Siradanai",
+      lastName: "Boonyuen"
+    });
+    agent.add('Complete');
+    return query
   }
+
+  function getUser(agent) {
+    let userId = agent.originalRequest.payload.data.source.userId;
+    let query = db.ref('users').child(userId).once('value').then(snapshot => {
+      let firstName = snapshot.val().firstName;
+      let lastName = snapshot.val().lastName;
+      agent.add(firstName);
+      agent.add(lastName);
+    })
+    return query
+  }
+
+  // //Feature Register
+  // function register(agent) {
+  //   let firstName = request.body.queryResult.parameters.fName; //get first name
+  //   let lastName = request.body.queryResult.parameters.lName; //get last name
+  //   let tel = request.body.queryResult.parameters.tel;
+  //   let email = request.body.queryResult.parameters.email;
+  //   let userId = agent.originalRequest.payload.data.source.userId;
+  //   agent.add(userId);
+  //   let usersRef = db.ref("users");
+  //   let query = usersRef.child(userId).set({
+  //     firstName: firstName,
+  //     lastName: lastName,
+  //     tel: tel,
+  //     email: email
+  //   })
+  //   agent.add('Complete');
+  //   return query
+  // }
 
   function listTrainingByDate(agent) {
     let date = request.body.queryResult.parameters.date;
@@ -83,9 +105,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   let intentMap = new Map();
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('..', register);
   intentMap.set('Start', listTrainingByDate);
-  intentMap.set('List All Training', listAllTraining)
+  intentMap.set('Training-List', listAllTraining)
+  intentMap.set('Regis',setUser);
+  intentMap.set('getUser', getUser);
 
   agent.handleRequest(intentMap);
 });
