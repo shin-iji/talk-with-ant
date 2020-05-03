@@ -30,26 +30,60 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
-  function setUser(agent) {
-    let userId = agent.originalRequest.payload.data.source.userId;
-    let query = db.ref('users').child(userId).set({
-      firstName: "Siradanai",
-      lastName: "Boonyuen"
-    });
-    agent.add('Complete');
+  //List Training Course
+  function listAllTraining(agent) {
+    let trainingRef = firestore.collection('Training Courses');
+    let query = trainingRef.get().then(snapshot => {
+      if (snapshot.empty) {
+        agent.add('ไม่มีการจัดอบรม');
+      }
+
+      snapshot.forEach(doc => {
+        agent.add(doc.data().name);
+      })
+    })
     return query
   }
 
+  function listTrainingByDate(agent) {
+    let date = request.body.queryResult.parameters.date;
+    agent.add(date);
+
+    let trainingRef = firestore.collection('Training Courses');
+    let query = trainingRef.where('date', '==', date).get().then(snapshot => {
+
+      if (snapshot.empty) {
+        agent.add('ไม่มีการจัดอบรม');
+      }
+
+      snapshot.forEach(doc => {
+        agent.add(doc.id, '=>', doc.data());
+      })
+    })
+    return query
+  }
+
+  function getTrainingDetail(agent) {
+    let keyword = agent.originalRequest.payload.data.source.keyword;
+    let query = firestore.collection('Training Courses').doc(keyword).get().then(doc => {
+      agent.add(doc.data());
+    })
+    return query
+  }
+
+  //Register
   function getUser(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
     let query = db.ref('users').child(userId).once('value').then(snapshot => {
       let firstName = snapshot.val().firstName;
       let lastName = snapshot.val().lastName;
-      agent.add(firstName);
-      agent.add(lastName);
+      agent.add('ชื่อ: ' + firstName + '\n' + 
+                'นามสกุล: ' + lastName);
     })
     return query
   }
+
+  
 
   // //Feature Register
   // function register(agent) {
@@ -70,35 +104,17 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   //   return query
   // }
 
-  function listTrainingByDate(agent) {
-    let date = request.body.queryResult.parameters.date;
-    agent.add(date);
+  
 
-    let trainingRef = firestore.collection('Training Courses');
-    let query = trainingRef.where('date', '==', date).get().then(snapshot => {
+  
 
-      if (snapshot.empty) {
-        agent.add('ไม่มีการจัดอบรม');
-      }
-
-      snapshot.forEach(doc => {
-        agent.add(doc.id, '=>', doc.data());
-      })
-    })
-    return query
-  }
-
-  function listAllTraining(agent) {
-    let trainingRef = firestore.collection('Training Courses');
-    let query = trainingRef.get().then(snapshot => {
-      if (snapshot.empty) {
-        agent.add('ไม่มีการจัดอบรม');
-      }
-
-      snapshot.forEach(doc => {
-        agent.add(doc.id, '=>', doc.data());
-      })
-    })
+  function setUser(agent) {
+    let userId = agent.originalRequest.payload.data.source.userId;
+    let query = db.ref('users').child(userId).set({
+      firstName: "Siradanai",
+      lastName: "Boonyuen"
+    });
+    agent.add('Complete');
     return query
   }
 
