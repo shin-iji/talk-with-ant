@@ -27,18 +27,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function listTrainingByDate(agent) {
     let date = request.body.queryResult.parameters.date;
     agent.add(date);
-    let trainingRef = firestore.collection('Training Courses');
-    let query = trainingRef.where('date','==', date).get().then(snapshot => {
-      if (snapshot.empty) {
-        agent.add('ไม่มีการจัดอบรม');
-      }
-
-      snapshot.forEach(doc => {
-        agent.add(/*insert text here*/);
+    let trainingRef = firestore.collection("Training Courses");
+    let query = trainingRef.where("date", ">=", date).get().then(snapshot => {
+      if (snapshot.empty) { //No Training
+        agent.add(/*insert text here*/'No Training');
+        return;
+      }  
+  
+      snapshot.forEach(doc => { //Found Training
         agent.add(doc.data().name);
-      })
-    })
-    return query
+      });
+
+    }).catch(err => { //Error
+      agent.add('Error getting documents', err);
+    });
+    return query;
   }
 
   function listTrainingByTopic(agent) {
@@ -65,14 +68,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let topic = request.body.queryResult.parameters.Topic;
     agent.add(topic);
     let trainingRef = firestore.collection("Training Courses");
-    let query = trainingRef.where('name','>=', topic).get().then(snapshot => {
+    let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
         agent.add(/*insert text here*/'No Training');
         return;
       }  
   
       snapshot.forEach(doc => { //Found Training
-        agent.add(/*insert text here*/);
+        agent.add('มีดังนี้');
         agent.add(doc.data().name);
         agent.add(doc.data().date);
       });
@@ -89,6 +92,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Start Choice - Date', listTrainingByDate);
   intentMap.set('S Choice - topic - Info', TrainingDetail);
   intentMap.set('Choice - topic - Info', TrainingDetail);
+  intentMap.set('S Choice - Date - Info', TrainingDetail);
 
   agent.handleRequest(intentMap);
 });
