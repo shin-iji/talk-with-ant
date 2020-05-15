@@ -86,6 +86,20 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     return query;
   }
 
+  function Register(agent) {
+    let userId = agent.originalRequest.payload.data.source.userId;
+    let name = request.body.queryResult.parameters.name;
+    let tel = request.body.queryResult.parameters.phoneNum;
+    let email = request.body.queryResult.parameters.email;
+    let query = db.ref("users").child(userId).set({
+      name: name,
+      tel: tel,
+      email: email
+    });
+    agent.add('Complete');
+    return query;
+  }
+
   let intentMap = new Map();
   intentMap.set('test', welcome);
   intentMap.set('Start Choice - topic', listTrainingByTopic)
@@ -94,6 +108,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Choice - topic - Info', TrainingDetail);
   intentMap.set('S Choice - Date - Info', TrainingDetail);
   intentMap.set('Choice - Date - Info', TrainingDetail);
+  intentMap.set('Register Confirm - yes', Register);
 
   agent.handleRequest(intentMap);
 });
