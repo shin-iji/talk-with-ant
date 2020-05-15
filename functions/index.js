@@ -7,7 +7,7 @@ const {Card, Suggestion} = require('dialogflow-fulfillment');
 const admin = require('firebase-admin');
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
-  databaseURL: 'https://ant-llicbp.firebaseio.com'
+  databaseURL: 'https://antv1-rkiiru.firebaseio.com'
 });
 let db = admin.database();
 let firestore = admin.firestore();
@@ -22,17 +22,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function welcome(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
     agent.add(userId);
-    let trainingRef = firestore.collection('Training Courses');
-    let query = trainingRef.get().then(snapshot => {
-      if (snapshot.empty) {
-        agent.add('ไม่มีการจัดอบรม');
-      }
-
-      snapshot.forEach(doc => {
-        agent.add(doc.data().name)
-      })
-    })
-    return query
   }
 
   function listTrainingByDate(agent) {
@@ -46,14 +35,51 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
       snapshot.forEach(doc => {
         agent.add(/*insert text here*/);
-        agent.add(doc.data().name)
+        agent.add(doc.data().name);
       })
     })
     return query
   }
+
+  function listTrainingByTopic(agent) {
+    let topic = request.body.queryResult.parameters.topic;
+    agent.add(topic);
+    let trainingRef = firestore.collection("Training Courses");
+    let query = trainingRef.where("name", ">=", topic).get().then(snapshot => {
+      if (snapshot.empty) {
+        agent.add('No matching documents.');
+        return;
+      }  
+  
+      snapshot.forEach(doc => {
+        agent.add(doc.data().name);
+      });
+
+    }).catch(err => {
+      agent.add('Error getting documents', err);
+    });
+    return query;
+  }
+
+  function TrainingDetail(agent) {
+    let topic = request.body.queryResult.parameters.topic;
+    agent.add(topic);
+    let trainingRef = firestore.collection('Training Courses');
+    let query = trainingRef.where('name','==', topic).get().then(snapshot => {
+      snapshot.forEach(doc => {
+        agent.add(/*insert text here*/);
+        agent.add(doc.data().name);
+        agent.add(doc.data().date);
+      })
+    })
+    return query
+  }
+
   let intentMap = new Map();
   intentMap.set('test', welcome);
+  intentMap.set('Start Choice - topic', listTrainingByTopic)
   intentMap.set('Start Choice - Date', listTrainingByDate);
+  intentMap.set('S Choice - Date - Info', TrainingDetail);
 
   agent.handleRequest(intentMap);
 });
