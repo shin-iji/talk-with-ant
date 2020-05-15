@@ -75,9 +75,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       }  
   
       snapshot.forEach(doc => { //Found Training
-        agent.add('มีดังนี้');
-        agent.add(doc.data().name);
-        agent.add(doc.data().date);
+        agent.add('รายละเอียดดังนี้');
+        agent.add('ชื่อ: ' + doc.data().name);
+        agent.add('วันที่: ' + doc.data().date.substring(0,10));
       });
 
     }).catch(err => { //Error
@@ -93,6 +93,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('S Choice - topic - Info', TrainingDetail);
   intentMap.set('Choice - topic - Info', TrainingDetail);
   intentMap.set('S Choice - Date - Info', TrainingDetail);
+  intentMap.set('Choice - Date - Info', TrainingDetail);
 
   agent.handleRequest(intentMap);
 });
