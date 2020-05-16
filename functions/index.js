@@ -100,15 +100,39 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     return query;
   }
 
+  function getPayment(agent) {
+    let topic = request.body.queryResult.parameters.Topic;
+    let trainingRef = firestore.collection("Training Courses");
+    let query = trainingRef.where("name","==", topic).get().then(snapshot => {
+      if (snapshot.empty) { //No Training
+        agent.add(/*insert text here*/'No Training');
+        return;
+      }  
+  
+      snapshot.forEach(doc => { //get cost from Database
+        agent.add('การลงทะเบียนมีค่าเข้าร่วมเป็นจำนวนเงิน ' + doc.data().payment + ' บาท ท่านตกลงที่จะเข้าร่วมเลยไหมครับถ้าตกลงทางเราจะส่งบิลเรียกเก็บเงินให้ทันที');
+        agent.add('กรุณาพิมพ์ "ตกลง" เพื่อยืนยัน');
+        agent.add('กรุณาพิมพ์ "ไม่ตกลง" เพื่อยกเลิก');
+      });
+
+    }).catch(err => { //Error
+      agent.add('Error getting documents', err);
+    });
+    return query;
+  }
+
   let intentMap = new Map();
   intentMap.set('test', welcome);
   intentMap.set('Start Choice - topic', listTrainingByTopic)
   intentMap.set('Start Choice - Date', listTrainingByDate);
+  intentMap.set('Choice - topic', listTrainingByTopic)
+  intentMap.set('Choice - Date', listTrainingByDate);
   intentMap.set('S Choice - topic - Info', TrainingDetail);
   intentMap.set('Choice - topic - Info', TrainingDetail);
   intentMap.set('S Choice - Date - Info', TrainingDetail);
   intentMap.set('Choice - Date - Info', TrainingDetail);
   intentMap.set('Register Confirm - yes', Register);
+  intentMap.set('Register Confirm', getPayment);
 
   agent.handleRequest(intentMap);
 });
