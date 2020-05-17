@@ -105,7 +105,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add(/*insert text here*/'ไม่งานอบรม');
+        agent.add('ไม่งานอบรมไม่มีงานอบรมที่คุณตามหาครับ');
         return;
       }  
   
