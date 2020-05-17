@@ -91,11 +91,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   function Register(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
-    // let topic = request.body.queryResult.parameters.Topic;
+    let topic = request.body.queryResult.parameters.Topic;
     let name = request.body.queryResult.parameters.name;
     let tel = request.body.queryResult.parameters.phoneNum;
     let email = request.body.queryResult.parameters.email;
-    let query = db.ref("users").child(userId).set({
+    let query = db.ref(topic).child("users").child(userId).set({
       name: name,
       tel: tel,
       email: email
