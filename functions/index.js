@@ -30,7 +30,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("date", ">=", date).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add(/*insert text here*/'No Training');
+        agent.add('วันที่นี้ไม่มีการจัดงานอบรมครับผม');//Text here
         return;
       }  
   
@@ -39,7 +39,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       });
 
     }).catch(err => { //Error
-      agent.add('Error getting documents', err);
+      agent.add('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม', err);//Text here
     });
     return query;
   }
@@ -50,7 +50,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name", ">=", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add(/*insert text here*/'No Training');
+        agent.add('ไม่พบ หัวข้อ นี้ในงานอบรมครับผม ')//Text;
         return;
       }  
   
@@ -59,7 +59,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       });
 
     }).catch(err => { //Error
-      agent.add('Error getting documents', err);
+      agent.add('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม', err);//Text here
     });
     return query;
   }
@@ -70,7 +70,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add(/*insert text here*/'No Training');
+        agent.add('วันที่นี้ไม่มีการจัดงานอบรมครับผม ');//Text here
         return;
       }  
   
@@ -81,7 +81,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       });
 
     }).catch(err => { //Error
-      agent.add('Error getting documents', err);
+      agent.add('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม', err);//Text here
     });
     return query;
   }
@@ -96,7 +96,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       tel: tel,
       email: email
     });
-    agent.add('Complete');
+    agent.add('สำเร็จ');
     return query;
   }
 
@@ -105,7 +105,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add(/*insert text here*/'No Training');
+        agent.add(/*insert text here*/'ไม่งานอบรม');
         return;
       }  
   
@@ -116,7 +116,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       });
 
     }).catch(err => { //Error
-      agent.add('Error getting documents', err);
+      agent.add('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม', err);//Text here
     });
     return query;
   }
