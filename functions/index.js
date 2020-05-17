@@ -20,21 +20,22 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
   function welcome(agent) {
-    let userId = agent.originalRequest.payload.data.source.userId;
-    agent.add(userId);
+    agent.add('สวัสดีครับ ต้องการสมัครอบรมอะไรไหมเอ้ย เราช่วยคุณหาได้นะ');
+    agent.add('เพียงเเค่ระบุวันที่ หรือ หัวข้อที่สนใจ เราจะตรวจสอบให้ว่ามีที่ตรงหรือใกล้เคียงไหมมาใหเลือกเลยละ')
   }
 
   function listTrainingByDate(agent) {
     let date = request.body.queryResult.parameters.date;
-    agent.add(date);
     let trainingRef = firestore.collection("Training Courses");
-    let query = trainingRef.where("date", ">=", date).get().then(snapshot => {
+    let query = trainingRef.where("date", "==", date).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add('วันที่นี้ไม่มีการจัดงานอบรมครับผม');//Text here
+        agent.add('ไม่พบ หัวข้อ นี้ในงานอบรมครับผม ')//Text;
         return;
       }  
-  
-      snapshot.forEach(doc => { //Found Training
+
+      //Found Training  
+      agent.add('วันที่ ' + date.substring(0,10) + ' มีการจัดงานอบรมดังนี้ครับ');
+      snapshot.forEach(doc => { 
         agent.add(doc.data().name);
       });
 
@@ -46,15 +47,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   function listTrainingByTopic(agent) {
     let topic = request.body.queryResult.parameters.topic; //Case sensitive only
-    agent.add(topic);
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name", ">=", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
         agent.add('ไม่พบ หัวข้อ นี้ในงานอบรมครับผม ')//Text;
         return;
       }  
-  
-      snapshot.forEach(doc => { //Found Training
+
+      //Found Training  
+      agent.add('งานอบรมที่เกี่ยวข้องกับหัวข้อว่า ' + topic + ' มีดังนี้ครับ');
+      snapshot.forEach(doc => { 
         agent.add(doc.data().name);
       });
 
@@ -73,9 +75,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         agent.add('วันที่นี้ไม่มีการจัดงานอบรมครับผม ');//Text here
         return;
       }  
-  
-      snapshot.forEach(doc => { //Found Training
-        agent.add('รายละเอียดดังนี้');
+
+      //Found Training
+      agent.add('งานอบรม' + doc.data().name +'รายละเอียดดังนี้');
+      snapshot.forEach(doc => { 
         agent.add('ชื่อ: ' + doc.data().name);
         agent.add('วันที่: ' + doc.data().date.substring(0,10));
       });
@@ -88,6 +91,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   function Register(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
+    // let topic = request.body.queryResult.parameters.Topic;
     let name = request.body.queryResult.parameters.name;
     let tel = request.body.queryResult.parameters.phoneNum;
     let email = request.body.queryResult.parameters.email;
@@ -122,7 +126,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
 
   let intentMap = new Map();
-  intentMap.set('test', welcome);
+  intentMap.set('Welcome with Find LU', welcome);
   intentMap.set('Start Choice - topic', listTrainingByTopic)
   intentMap.set('Start Choice - Date', listTrainingByDate);
   intentMap.set('Choice - topic', listTrainingByTopic)
