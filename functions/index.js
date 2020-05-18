@@ -29,7 +29,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("date", "==", date).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add('ไม่พบ หัวข้อ นี้ในงานอบรมครับผม ')//Text;
+        agent.add('ไม่พบ หัวข้องานอบรมภายในวันที่นี้ ' + date.substring(0,10))//Text;
         return;
       }  
 
@@ -40,7 +40,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       });
 
     }).catch(err => { //Error
-      agent.add('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม', err);//Text here
+      agent.end('ต้องขออภัยด้วยครับผม เกิดข้อผิดพลาดในการดึงข้อมูล ของอบรม โดยวันที', err);//Text here
     });
     return query;
   }
