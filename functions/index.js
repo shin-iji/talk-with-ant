@@ -68,19 +68,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
   function TrainingDetail(agent) {
     let topic = request.body.queryResult.parameters.Topic;
-    agent.add(topic);
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
-      if (snapshot.empty) { //No Training
-        agent.add('วันที่นี้ไม่มีการจัดงานอบรมครับผม ');//Text here
-        return;
-      }  
-
       //Found Training
-      agent.add('งานอบรม' + doc.data().name +'รายละเอียดดังนี้');
+      agent.add('งานอบรม ' + topic +' รายละเอียดดังนี้');
       snapshot.forEach(doc => { 
         agent.add('ชื่อ: ' + doc.data().name);
         agent.add('วันที่: ' + doc.data().date.substring(0,10));
+        agent.add('รายละเอียด: ' + doc.data().detail);
+        agent.add('ผู้สอน: ' + doc.data().speaker);
+        agent.add('สถานที่: ' + doc.data().place);
+        agent.add('ค่าใช้จ่าย: ' + doc.data().payment + ' บาท');
+        agent.add('ต้องการสมัครเลยมั้ย ถ้าใช่ก็พิมพ์ว่า "สมัคร" เลย');
       });
 
     }).catch(err => { //Error
@@ -92,7 +91,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function Register(agent) {
     let userId = agent.originalRequest.payload.data.source.userId;
     let topic = request.body.queryResult.parameters.Topic;
-    let name = request.body.queryResult.parameters.name;
+    let name = request.body.queryResult.parameters.name.person.name;
     let tel = request.body.queryResult.parameters.phoneNum;
     let email = request.body.queryResult.parameters.email;
     let query = db.ref(topic).child("users").child(userId).set({
