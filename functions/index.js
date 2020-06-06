@@ -20,8 +20,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
   function welcome(agent) {
-    agent.add('สวัสดีครับ ต้องการสมัครอบรมอะไรไหมเอ้ย เราช่วยคุณหาได้นะ');
-    agent.add('เพียงเเค่ระบุวันที่ หรือ หัวข้อที่สนใจ เราจะตรวจสอบให้ว่ามีที่ตรงหรือใกล้เคียงไหมมาใหเลือกเลยละ')
+    agent.add('สวัสดีครับ ต้องการสมัครงานอบรมหรือไม่ เราช่วยคุณหาได้นะครับผม');
+    agent.add('เพียงเเค่ระบุวันที่ หรือ หัวข้อที่สนใจ เราจะตรวจสอบให้ว่ามีที่ตรงหรือใกล้เคียงมาให้เลือกทันทีเลยครับผม')
   }
 
   function listTrainingByDate(agent) {
@@ -34,7 +34,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       }  
 
       //Found Training  
-      agent.add('วันที่ ' + date.substring(0,10) + ' มีการจัดงานอบรมดังนี้ครับ');
+      agent.add('วันที่ ' + date.substring(0,10) + ' มีการจัดงานอบรมดังนี้ครับผม กรุณาพิมพ์ชื่องานอบรมที่ต้องการได้เลยครับ');
       snapshot.forEach(doc => { 
         agent.add(doc.data().name);
       });
@@ -55,7 +55,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       }  
 
       //Found Training  
-      agent.add('งานอบรมที่เกี่ยวข้องกับหัวข้อว่า ' + topic + ' มีดังนี้ครับ');
+      agent.add('งานอบรมที่เกี่ยวข้องกับหัวข้อว่า ' + topic + ' มีดังนี้ครับผม');
       snapshot.forEach(doc => { 
         agent.add(doc.data().name);
       });
@@ -71,7 +71,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       //Found Training
-      agent.add('งานอบรม ' + topic +' รายละเอียดดังนี้');
+      agent.add('งานอบรม ' + topic +' มีรายละเอียดดังนี้ครับผม');
       snapshot.forEach(doc => { 
         agent.add('ชื่อ: ' + doc.data().name);
         agent.add('วันที่: ' + doc.data().date.substring(0,10));
@@ -79,7 +79,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         agent.add('ผู้สอน: ' + doc.data().speaker);
         agent.add('สถานที่: ' + doc.data().place);
         agent.add('ค่าใช้จ่าย: ' + doc.data().payment + ' บาท');
-        agent.add('ต้องการสมัครเลยมั้ย ถ้าใช่ก็พิมพ์ว่า "สมัคร" เลย');
+        agent.add('ต้องการสมัครเลยหรือไม่ ถ้าต้อง กรุณาพิมพ์ว่า "สมัคร" ได้เลยนะครับผม');
       });
 
     }).catch(err => { //Error
@@ -108,12 +108,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let trainingRef = firestore.collection("Training Courses");
     let query = trainingRef.where("name","==", topic).get().then(snapshot => {
       if (snapshot.empty) { //No Training
-        agent.add('ไม่มีงานอบรมที่คุณตามหาครับ');
+        agent.add('ไม่มีงานอบรมที่คุณตามหาครับผม กรุณาลองใหม่อีกครั้งนะครับ');
         return;
       }  
   
       snapshot.forEach(doc => { //get cost from Database
-        agent.add('การลงทะเบียนมีค่าเข้าร่วมเป็นจำนวนเงิน ' + doc.data().payment + ' บาท ท่านตกลงที่จะเข้าร่วมเลยไหมครับถ้าตกลงทางเราจะส่งบิลเรียกเก็บเงินให้ทันที');
+        agent.add('การลงทะเบียนมีค่าเข้าร่วมเป็นจำนวนเงิน ' + doc.data().payment + ' บาท ท่านตกลงที่จะเข้าร่วมเลยไหมครับ ถ้า "ตกลง" ทางเราจะส่งบิลเรียกเก็บเงินให้ทันทีครับผม');
         agent.add('กรุณาพิมพ์ "ตกลง" เพื่อยืนยัน');
         agent.add('กรุณาพิมพ์ "ไม่ตกลง" เพื่อยกเลิก');
       });
