@@ -55,7 +55,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       }  
 
       //Found Training  
-      agent.add('งานอบรมที่เกี่ยวข้องกับหัวข้อว่า ' + topic + ' มีดังนี้ครับผม');
+      agent.add('งานอบรมที่เกี่ยวข้องกับหัวข้อว่า ' + topic + ' มีดังนี้ครับผม กรุณาพิมพ์ชื่องานอบรมที่ต้องการได้เลยครับ');
       snapshot.forEach(doc => { 
         agent.add(doc.data().name);
       });
