@@ -97,7 +97,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     let query = db.ref(topic).child("users").child(userId).set({
       name: name,
       tel: tel,
-      email: email
+      email: email,
+      checkAttend: false
     });
     agent.add('สำเร็จ');
     return query;
