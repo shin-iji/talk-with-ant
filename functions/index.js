@@ -125,6 +125,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     return query;
   }
 
+  function checkAttend(agent) {
+    let userId = agent.originalRequest.payload.data.source.userId;
+    let topic = request.body.queryResult.parameters.topic;
+    let query = db.ref(topic).child("users").child(userId).update({
+      checkAttend: true
+    });
+    agent.add('ขอบคุณสำหรับความร่วมมือครับผม ต้องการให้ช่วยอะไรเพิ่มเติมไหมครับผม');
+    return query;
+  }
+
   let intentMap = new Map();
   intentMap.set('Welcome with Find LU', welcome);
   intentMap.set('Start Choice - topic', listTrainingByTopic)
@@ -137,6 +147,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Choice - Date - Info', TrainingDetail);
   intentMap.set('Register Confirm - yes', Register);
   intentMap.set('Register Confirm', getPayment);
+  intentMap.set('Check-Attend - Checked', checkAttend);
 
   agent.handleRequest(intentMap);
 });
