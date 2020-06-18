@@ -10,6 +10,7 @@ const listTraining = require('./src/listTraining');
 const trainingDetail = require('./src/trainingDetail');
 const register = require('./src/register');
 const checkAttend = require('./src/checkAttend');
+const editInfo = require('./src/editInfo');
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
   const agent = new WebhookClient({ request, response });
@@ -29,6 +30,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Register Confirm - yes', register.register);
   intentMap.set('Register Confirm', register.getPayment);
   intentMap.set('Check-Attend - Checked', checkAttend);
+  intentMap.set('Edit-registerInfo - Name - yes - EditingName - yes', editInfo.editName);
 
   agent.handleRequest(intentMap);
 });
