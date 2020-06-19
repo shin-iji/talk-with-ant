@@ -5,15 +5,15 @@ function editName(agent) {
     let topic = agent.parameters.topic;
     let name = agent.parameters.name;
     let query = db.realtimeDB.ref(topic).child("users").child(userId).update({
-            name: name
-        })
-        .then(function () {
-            agent.add(`เรียบร้อย เราได้เปลี่ยนชื่อของคุณเป็น ${name} แล้วครับ ต้องการจะทำอะไรอีกไหมครับผม`);
-        })
-        .catch(function (error) {
-            agent.add('error');
-        });
-
+        name: name
+    })
+    .then(() => {
+        agent.add(`เรียบร้อย เราได้เปลี่ยนชื่อของคุณเป็น ${name} แล้วครับ`);
+        agent.add('ต้องการจะทำอะไรอีกไหมครับผม');
+    })
+    .catch(error => {
+        agent.add('error' + error);
+    });
     return query;
 }
 

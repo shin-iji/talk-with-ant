@@ -11,8 +11,11 @@ function register(agent) {
         tel: tel,
         email: email,
         checkAttend: false
+    }).then(() => {
+        agent.add('สำเร็จ');
+    }).catch(error => {
+        agent.add(error);
     });
-    agent.add('สำเร็จ');
     return query;
 }
 
