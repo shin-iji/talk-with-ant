@@ -31,6 +31,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Register Confirm', register.getPayment);
   intentMap.set('Check-Attend - Checked', checkAttend);
   intentMap.set('Edit-registerInfo - Name - yes - EditingName - yes', editInfo.editName);
+  intentMap.set('Edit-registerInfo - Phone - yes - Editing - yes', editInfo.editPhoneNum);
+  intentMap.set('Edit-registerInfo - Email - yes - Editing - yes', editInfo.editEmail);
 
   agent.handleRequest(intentMap);
 });
