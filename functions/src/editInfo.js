@@ -34,7 +34,25 @@ function editPhoneNum(agent) {
     return query;
 }
 
+function editEmail(agent) {
+    let userId = agent.originalRequest.payload.data.source.userId;
+    let topic = agent.parameters.topic;
+    let email = agent.parameters.email;
+    let query = db.realtimeDB.ref(topic).child("users").child(userId).update({
+        email: email
+    })
+    .then(() => {
+        agent.add(`ได้ทำการเปลี่ยนแปลงเป็น ${email} แล้วครับ`);
+        agent.add('ต้องการจะทำอะไรอีกไหมครับผม');
+    })
+    .catch(error => {
+        agent.add('error' + error);
+    });
+    return query;
+}
+
 module.exports = {
     editName,
-    editPhoneNum
+    editPhoneNum,
+    editEmail
 };
