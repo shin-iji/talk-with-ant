@@ -7,8 +7,8 @@ const { WebhookClient } = require("dialogflow-fulfillment");
 process.env.DEBUG = "dialogflow:debug"; // enables lib debugging statements
 
 //Bot Agent Webhhok
-const ant = require("./agent/ant");
 const api = require("./api/api");
+const ant = require("./agent/ant");
 
 //Function Handler
 const welcome = require("./function_handler/welcome");
@@ -30,3 +30,5 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 });
 
 exports.twaApi = functions.https.onRequest(api);
+
+exports.twaWebhook = functions.https.onRequest(ant.webhook);
