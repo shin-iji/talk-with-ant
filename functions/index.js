@@ -2,57 +2,30 @@
 
 const functions = require("firebase-functions");
 const { WebhookClient } = require("dialogflow-fulfillment");
+//const { Card, Suggestion } = require("dialogflow-fulfillment");
 
-process.env.DEBUG = "dialogflow:debug";
+process.env.DEBUG = "dialogflow:debug"; // enables lib debugging statements
 
-const welcome = require("./src/welcome");
-const listTraining = require("./src/listTraining");
-const trainingDetail = require("./src/trainingDetail");
-const register = require("./src/register");
-const checkAttend = require("./src/checkAttend");
-const editInfo = require("./src/editInfo");
+//Bot Agent Webhhok
+const ant = require("./agent/ant");
 
-exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
-	(request, response) => {
-		const agent = new WebhookClient({ request, response });
-		console.log(
-			"Dialogflow Request headers: " + JSON.stringify(request.headers)
-		);
-		console.log(
-			"Dialogflow Request body: " + JSON.stringify(request.body)
-		);
+//Function Handler
+const welcome = require("./function_handler/welcome");
+const fallback = require("./function_handler/fallback");
+const listCourses = require("./function_handler/listCourses");
 
-		let intentMap = new Map();
-		intentMap.set("Default Welcome Intent", welcome.welcome);
-		intentMap.set("Listing", listTraining.listTrainingCourses);
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+  const agent = new WebhookClient({ request, response });
+  console.log("Dialogflow Request headers: " + JSON.stringify(request.headers));
+  console.log("Dialogflow Request body: " + JSON.stringify(request.body));
 
-		// intentMap.set(
-		// 	"Start Choice - topic",
-		// 	listTraining.listTrainingByTopic
-		// );
-		// intentMap.set("Start Choice - Date", listTraining.listTrainingByDate);
-		// intentMap.set("Choice - topic", listTraining.listTrainingByTopic);
-		// intentMap.set("Choice - Date", listTraining.listTrainingByDate);
-		// intentMap.set("S Choice - topic - Info", trainingDetail);
-		// intentMap.set("Choice - topic - Info", trainingDetail);
-		// intentMap.set("S Choice - Date - Info", trainingDetail);
-		// intentMap.set("Choice - Date - Info", trainingDetail);
-		// intentMap.set("Register Confirm - yes", register.register);
-		// intentMap.set("Register Confirm", register.getPayment);
-		// intentMap.set("Check-Attend - Checked", checkAttend);
-		// intentMap.set(
-		// 	"Edit-registerInfo - Name - yes - EditingName - yes",
-		// 	editInfo.editName
-		// );
-		// intentMap.set(
-		// 	"Edit-registerInfo - Phone - yes - Editing - yes",
-		// 	editInfo.editPhoneNum
-		// );
-		// intentMap.set(
-		// 	"Edit-registerInfo - Email - yes - Editing - yes",
-		// 	editInfo.editEmail
-		// );
+  // Run the proper function handler based on the matched Dialogflow intent name
+  let intentMap = new Map();
+  intentMap.set("Default Welcome Intent", welcome);
+  intentMap.set("Default Fallback Intent", fallback);
+  intentMap.set("Listing", listCourses);
 
-		agent.handleRequest(intentMap);
-	}
-);
+  agent.handleRequest(intentMap);
+});
+
+exports.testAgent = functions.https.onRequest(ant.webhook);
