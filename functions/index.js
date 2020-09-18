@@ -8,6 +8,7 @@ process.env.DEBUG = "dialogflow:debug"; // enables lib debugging statements
 
 //Bot Agent Webhhok
 const ant = require("./agent/ant");
+const api = require("./api/api");
 
 //Function Handler
 const welcome = require("./function_handler/welcome");
@@ -28,4 +29,4 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   agent.handleRequest(intentMap);
 });
 
-exports.testAgent = functions.https.onRequest(ant.webhook);
+exports.twaApi = functions.https.onRequest(api);
