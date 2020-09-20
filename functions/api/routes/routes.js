@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const coursesController = require("../controllers/coursesController");
-const usersController = require("../controllers/usersController");
+const coursesController = require("../controllers/courses-controller");
+const usersController = require("../controllers/users-controller");
 
 router.get("/", coursesController.getAllCourses);
 router.get("/:id", coursesController.getCourse);
