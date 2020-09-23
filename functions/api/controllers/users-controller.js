@@ -2,14 +2,15 @@ const db = require("../../database/database");
 
 const createUser = async (req, res) => {
   try {
-    const { courseName, userId, name, tel, email, timestamp } = req.body;
+    const { courseName, userId, name, tel, email } = req.body;
+    const timestamp = Date().toString();
     const data = {
       courseName,
       userId,
       name,
       tel,
       email,
-      timestamp,
+      timestamp: timestamp,
       checkAttent: false,
     };
     const courseId = [];
@@ -18,11 +19,7 @@ const createUser = async (req, res) => {
     snapshot.forEach((doc) => {
       courseId.push(doc.id);
     });
-    const addCourseUser = await courseRef
-      .doc(courseId[0])
-      .collection("users")
-      .doc(userId)
-      .set(data);
+    const addCourseUser = await courseRef.doc(courseId[0]).collection("users").doc().set(data);
     const userRef = await db.collection("Users").doc(userId).set(data);
 
     res.status(200).json({
