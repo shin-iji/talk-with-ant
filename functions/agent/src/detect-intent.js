@@ -1,14 +1,16 @@
-const DIALOGFLOW_PROJECTID = "antv2-xdbgna";
-const DIALOGFLOW_SERVICE_ACCOUNT = "dialogflow-service-account.json";
-
 const dialogflow = require("dialogflow");
 
-const sessionClient = new dialogflow.SessionsClient({
+exports.detectIntent = async (
   DIALOGFLOW_PROJECTID,
-  keyFilename: DIALOGFLOW_SERVICE_ACCOUNT,
-});
-
-exports.detectIntent = async (userId, message, languageCode) => {
+  DIALOGFLOW_SERVICE_ACCOUNT,
+  userId,
+  message,
+  languageCode
+) => {
+  const sessionClient = new dialogflow.SessionsClient({
+    DIALOGFLOW_PROJECTID,
+    keyFilename: DIALOGFLOW_SERVICE_ACCOUNT,
+  });
   const sessionPath = sessionClient.sessionPath(DIALOGFLOW_PROJECTID, userId);
   const request = {
     session: sessionPath,

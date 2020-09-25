@@ -1,16 +1,14 @@
-//const region = "asia-northeast1";
-//const functions = require("firebase-functions");
+let DIALOGFLOW_PROJECTID = "";
+let DIALOGFLOW_SERVICE_ACCOUNT = "";
+let channelAccessToken = "";
 
 const { convertStruct } = require("./src/convert-struct");
 const { detectIntent } = require("./src/detect-intent");
 //const { multicast } = require("../helper/multicast");
 const { reply } = require("../helper/reply");
-
 const querystring = require("querystring");
 
 const linepay = require("../linepay-api/reserve-payment");
-
-let channelAccessToken = "";
 
 exports.webhook = async (req, res) => {
   console.log("Start Webhook", JSON.stringify(req.body));
@@ -19,17 +17,24 @@ exports.webhook = async (req, res) => {
 
   //Find Bot Destination
   switch (destination) {
-    case "U933c679052ae3a715a5b8463bf9c25c8": // Test Bot
-      channelAccessToken =
-        "z0smCCfJ3+29+lPdjCLGFBoTZhGFuuYcn86OzBKTXDZaR0bJQfyvZFL3jZYFTd6euSugKfO4X58yx77jV0vlcC+OwZCCBqCiaUvJlhK5ltHNBv41RFTb6Mi4805oy+FQei9dB2VzFqRIP7vPEzK5ZAdB04t89/1O/w1cDnyilFU=";
-      break;
     case "U5bbdb222ea05b9c391bad748cb859a6d": // Ant
       channelAccessToken =
         "Vu77dg2yeZmRwqJVjFpjXNGNMioOULYF6Qr9rXoNKLdHbCehW8Zlhdm4G9rpa5DYl4+kEjJXUVJCJOYsGehD+SNZBjR1gEAWltUjPEB6lL1i4T0ZNLilN85JSO92C22IBVVsnSQ7IxuYbWqQQMOUPwdB04t89/1O/w1cDnyilFU=";
+      DIALOGFLOW_PROJECTID = "antv2-xdbgna";
+      DIALOGFLOW_SERVICE_ACCOUNT = "ant-dialogflow-service-account.json";
+      break;
+    case "U4c942e6e783ace694220c4058f5894bd": //Ant Owner
+      channelAccessToken =
+        "n8oGQGp/o7wCxPkhGpCdQFzO1XJdbMIYl5nb4tq5hfDy9yPivTrjKK6ytE8yiSIONUhB1gwVy30jO6PCIVhnjNORCjUcCH05txDrn1vsfZqCsq9ENIkW1bO4QjqCFeq/14j9SWV1XCIQSICxpF6BSwdB04t89/1O/w1cDnyilFU=";
+      DIALOGFLOW_PROJECTID = "antowner-tovppp";
+      DIALOGFLOW_SERVICE_ACCOUNT = "ant-owner-dialogflow-service-account.json";
       break;
   }
 
   if (events.type === "message") {
+    if (events.message.text === "เช็คชื่อ") {
+    }
+
     const event = req.body.events[0];
     //const userId = event.source.userId
     const sessionId = event.source.groupId || event.source.userId;
@@ -37,7 +42,13 @@ exports.webhook = async (req, res) => {
 
     console.log("sessionId", sessionId);
 
-    const intentResponse = await detectIntent(sessionId, message, "th");
+    const intentResponse = await detectIntent(
+      DIALOGFLOW_PROJECTID,
+      DIALOGFLOW_SERVICE_ACCOUNT,
+      sessionId,
+      message,
+      "th"
+    );
     const replyMessage = await convertStruct(intentResponse);
 
     await reply(channelAccessToken, event.replyToken, replyMessage);
@@ -47,13 +58,13 @@ exports.webhook = async (req, res) => {
     const data = querystring.parse(events.postback.data);
     if (data.action === "RESERVE_PAYMENT") {
       const userId = events.source.userId;
-      const courseName = data.courseId;
+      const courseName = data.courseName;
       const amount = Number(data.amount);
-      // console.log(data);
-      // console.log(courseName);
-      // console.log(amount);
-      //const paymentPayload = require("../helper/payload");
       linepay.reservePayment(channelAccessToken, events.replyToken, courseName, amount, userId);
+    }
+    if (data.action === "CHECK_ATTEND") {
+      const userId = events.source.userId;
+      const courseName = data.courseName;
     }
   }
 
