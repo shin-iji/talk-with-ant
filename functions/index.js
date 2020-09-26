@@ -18,6 +18,8 @@ const welcome = require("./function_handler/welcome");
 const fallback = require("./function_handler/fallback");
 const listCourses = require("./function_handler/list-courses");
 const payment = require("./function_handler/check-ready-payment");
+const findCourseByDate = require("./function_handler/findCourseByDate");
+const courseInfo = require("./function_handler/course-info");
 
 const test = require("./function_handler/test");
 
@@ -31,6 +33,7 @@ exports.antDialogflowFulfillment = functions.https.onRequest((request, response)
   intentMap.set("Default Welcome Intent", welcome);
   intentMap.set("Default Fallback Intent", fallback);
   intentMap.set("Listing", listCourses);
+  intentMap.set("ShowInfo", courseInfo);
   intentMap.set("Test", test);
 
   //Payment
@@ -46,7 +49,8 @@ exports.antOwnerDialogflowFulfillment = functions.https.onRequest((request, resp
 
   // Run the proper function handler based on the matched Dialogflow intent name
   let intentMap = new Map();
-
+  intentMap.set("Check Attend", findCourseByDate);
+  //intentMap.set("Check Attend - Yes",)
   agent.handleRequest(intentMap);
 });
 

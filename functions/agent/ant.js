@@ -2,12 +2,18 @@ let DIALOGFLOW_PROJECTID = "";
 let DIALOGFLOW_SERVICE_ACCOUNT = "";
 let channelAccessToken = "";
 
+//Helper
+const lineHelper = require("../helper/line-helper");
+const querystring = require("querystring");
+const { reply } = require("../helper/reply");
+
+//Source Code
 const { convertStruct } = require("./src/convert-struct");
 const { detectIntent } = require("./src/detect-intent");
-//const { multicast } = require("../helper/multicast");
-const { reply } = require("../helper/reply");
-const querystring = require("querystring");
+const { sendCheckAttend } = require("./src/send-check-attend");
+const { checkAttend } = require("./src/check-attend");
 
+//Line Pay
 const linepay = require("../linepay-api/reserve-payment");
 
 exports.webhook = async (req, res) => {
@@ -32,9 +38,6 @@ exports.webhook = async (req, res) => {
   }
 
   if (events.type === "message") {
-    if (events.message.text === "เช็คชื่อ") {
-    }
-
     const event = req.body.events[0];
     //const userId = event.source.userId
     const sessionId = event.source.groupId || event.source.userId;
@@ -58,13 +61,33 @@ exports.webhook = async (req, res) => {
     const data = querystring.parse(events.postback.data);
     if (data.action === "RESERVE_PAYMENT") {
       const userId = events.source.userId;
+      const courseId = data.courseId;
       const courseName = data.courseName;
       const amount = Number(data.amount);
-      linepay.reservePayment(channelAccessToken, events.replyToken, courseName, amount, userId);
+      linepay.reservePayment(
+        channelAccessToken,
+        events.replyToken,
+        courseId,
+        courseName,
+        amount,
+        userId
+      );
     }
+
+    if (data.action === "SEND_CHECK_ATTEND") {
+      const courseId = data.courseId;
+      const courseName = data.courseName;
+      sendCheckAttend(courseId, courseName);
+      await reply(channelAccessToken, events.replyToken, [lineHelper.createTextMessage("ส่งแล้ว")]);
+    }
+
     if (data.action === "CHECK_ATTEND") {
       const userId = events.source.userId;
-      const courseName = data.courseName;
+      const courseId = data.courseId;
+      checkAttend(userId, courseId);
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage("เช็คชื่อเรียบร้อย"),
+      ]);
     }
   }
 

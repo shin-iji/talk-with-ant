@@ -1,4 +1,3 @@
-const { user } = require("firebase-functions/lib/providers/auth");
 const request = require("request-promise");
 const config = require("../config/config.json");
 const db = require("../database/database");
@@ -6,10 +5,18 @@ const db = require("../database/database");
 const linePayload = require("../helper/payload");
 const { reply } = require("../helper/reply");
 
-exports.reservePayment = async (channelAccessToken, replyToken, courseName, amount, userId) => {
+exports.reservePayment = async (
+  channelAccessToken,
+  replyToken,
+  courseId,
+  courseName,
+  amount,
+  userId
+) => {
   let url = `${config.linepay.api}/v2/payments/request`;
-  let orderId = await findOrderId(courseName, userId);
-
+  let orderId = await findOrderId(courseId, userId);
+  //console.log(orderId);
+  //console.log(userId);
   let payload = {
     productName: courseName,
     amount: amount,
@@ -41,6 +48,7 @@ exports.reservePayment = async (channelAccessToken, replyToken, courseName, amou
           productName: courseName,
           amount: amount,
           currency: "THB",
+          status: "not paid",
         };
         const transactionId = response.info.transactionId;
         const paymentUrl = response.info.paymentUrl.web;
@@ -61,15 +69,9 @@ async function saveTx(orderId, object) {
   const snapshot = await txRef.set(object);
 }
 
-async function findOrderId(courseName, userId) {
-  const courseId = [];
+async function findOrderId(courseId, userId) {
   const orderId = [];
-  const courseRef = db.collection("Training Courses");
-  const doc = await courseRef.where("courseName", "==", courseName).get();
-  doc.forEach((doc) => {
-    courseId.push(doc.id);
-  });
-  const userRef = db.collection(`Training Courses/wuiUz0tp8ZVlxz5eX6RN/users`);
+  const userRef = db.collection(`Training Courses/${courseId}/users`);
   const snapshot = await userRef.where("userId", "==", userId).get();
   snapshot.forEach((doc) => {
     orderId.push(doc.id);
