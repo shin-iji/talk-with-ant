@@ -2,6 +2,7 @@ const actionType = {
   RESERVE_PAYMENT: "RESERVE_PAYMENT",
   CHECK_ATTEND: "CHECK_ATTEND",
   SEND_CHECK_ATTEND: "SEND_CHECK_ATTEND",
+  COUNT_ATTEND: "COUNT_ATTEND",
 };
 
 module.exports = {
@@ -328,7 +329,7 @@ module.exports = {
       },
     };
   },
-  sendCheckAttend: (courseId, courseName, date) => {
+  askedSendCheckAttend: (courseName, date) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -379,9 +380,9 @@ module.exports = {
                 {
                   type: "button",
                   action: {
-                    type: "postback",
+                    type: "message",
                     label: "ต้องการ",
-                    data: `action=${actionType.SEND_CHECK_ATTEND}&courseId=${courseId}&courseName=${courseName}`,
+                    text: "ต้องการ",
                   },
                   position: "relative",
                   height: "md",
@@ -420,6 +421,124 @@ module.exports = {
             },
           ],
           height: "170px",
+        },
+      },
+    };
+  },
+  sendCheckAttend: (courseId, courseName) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "Check Attendees",
+              color: "#ffffff",
+              weight: "bold",
+              align: "center",
+            },
+          ],
+          backgroundColor: "#FF783E",
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `${courseName}`,
+              maxLines: 2,
+              wrap: true,
+              color: "#aaaaaa",
+              align: "center",
+            },
+            {
+              type: "separator",
+              margin: "md",
+              color: "#ffffff",
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: "เริ่มเช็คชื่อ",
+                    data: `action=${actionType.SEND_CHECK_ATTEND}&courseName=${courseName}&courseId=${courseId}`,
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                  margin: "none",
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
+  },
+  countAttend: (courseId, courseName) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "Check Attendees",
+              color: "#ffffff",
+              weight: "bold",
+              align: "center",
+            },
+          ],
+          backgroundColor: "#FF783E",
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `${courseName}`,
+              maxLines: 2,
+              wrap: true,
+              color: "#aaaaaa",
+              align: "center",
+            },
+            {
+              type: "separator",
+              margin: "md",
+              color: "#ffffff",
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: "นับยอดผู้เข้าร่วม",
+                    data: `action=${actionType.COUNT_ATTEND}&courseId=${courseId}`,
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                  margin: "none",
+                },
+              ],
+            },
+          ],
         },
       },
     };
