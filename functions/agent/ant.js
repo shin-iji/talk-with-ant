@@ -4,6 +4,7 @@ let channelAccessToken = "";
 
 //Helper
 const lineHelper = require("../helper/line-helper");
+const linePayload = require("../helper/payload");
 const querystring = require("querystring");
 const { reply } = require("../helper/reply");
 
@@ -12,6 +13,7 @@ const { convertStruct } = require("./src/convert-struct");
 const { detectIntent } = require("./src/detect-intent");
 const { sendCheckAttend } = require("./src/send-check-attend");
 const { checkAttend } = require("./src/check-attend");
+const { countAttend } = require("./src/count-attend");
 
 //Line Pay
 const linepay = require("../linepay-api/reserve-payment");
@@ -57,6 +59,10 @@ exports.webhook = async (req, res) => {
     await reply(channelAccessToken, event.replyToken, replyMessage);
   }
 
+  if (events.type === "follow") {
+    await reply(channelAccessToken, events.replyToken, [lineHelper.createTextMessage("สวัสดีจ้า")]);
+  }
+
   if (events.type === "postback") {
     const data = querystring.parse(events.postback.data);
     if (data.action === "RESERVE_PAYMENT") {
@@ -64,21 +70,18 @@ exports.webhook = async (req, res) => {
       const courseId = data.courseId;
       const courseName = data.courseName;
       const amount = Number(data.amount);
-      linepay.reservePayment(
-        channelAccessToken,
-        events.replyToken,
-        courseId,
-        courseName,
-        amount,
-        userId
-      );
+      await linepay.reservePayment(channelAccessToken, courseId, courseName, amount, userId);
     }
 
     if (data.action === "SEND_CHECK_ATTEND") {
       const courseId = data.courseId;
       const courseName = data.courseName;
+      console.log(events.replyToken);
       sendCheckAttend(courseId, courseName);
-      await reply(channelAccessToken, events.replyToken, [lineHelper.createTextMessage("ส่งแล้ว")]);
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage("ส่งเช็คชื่อเรียบร้อย สามารถเช็คยอดได้ที่ปุ่มเลยนะ"),
+        linePayload.countAttend(courseId, courseName),
+      ]);
     }
 
     if (data.action === "CHECK_ATTEND") {
@@ -87,6 +90,14 @@ exports.webhook = async (req, res) => {
       checkAttend(userId, courseId);
       await reply(channelAccessToken, events.replyToken, [
         lineHelper.createTextMessage("เช็คชื่อเรียบร้อย"),
+      ]);
+    }
+
+    if (data.action === "COUNT_ATTEND") {
+      const courseId = data.courseId;
+      let result = await countAttend(courseId);
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage(`มีผู้เข้าร่วมทั้งหมด ${result} คนจ้า`),
       ]);
     }
   }

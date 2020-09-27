@@ -6,6 +6,8 @@ const line = new lineSdk.Client(config.line);
 const lineHelper = require("../helper/line-helper");
 const linePayload = require("../helper/payload");
 const { push } = require("../helper/push");
+const channelAccessToken =
+  "n8oGQGp/o7wCxPkhGpCdQFzO1XJdbMIYl5nb4tq5hfDy9yPivTrjKK6ytE8yiSIONUhB1gwVy30jO6PCIVhnjNORCjUcCH05txDrn1vsfZqCsq9ENIkW1bO4QjqCFeq/14j9SWV1XCIQSICxpF6BSwdB04t89/1O/w1cDnyilFU=";
 
 module.exports = async (req, res) => {
   //console.log(req.query.transactionId);
@@ -42,15 +44,14 @@ module.exports = async (req, res) => {
         .then((response) => {
           console.log("confirmPayment response", JSON.stringify(response));
           if (response && response.returnCode === "0000" && response.info) {
-            line.pushMessage(
-              data.userId,
-              linePayload.successPayment(data.productName, data.amount)
-            );
+            line.pushMessage(data.userId, [
+              lineHelper.createTextMessage("ชำระเงินเรียบร้อยแล้ว"),
+              linePayload.successPayment(data.productName, data.amount),
+            ]);
             data.status = "paid";
-            line.pushMessage(data.userId, lineHelper.createTextMessage("ชำระเงินเรียบร้อยแล้ว"));
             saveTx(orderId, data);
+            push(channelAccessToken, ownerId, userInfo);
             line.pushMessage(data.userId, linePayload.askTodoAnything());
-            push(ownerId, userInfo);
           }
           res.send(response);
         })

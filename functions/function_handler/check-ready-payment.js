@@ -15,7 +15,7 @@ module.exports = async (agent) => {
       amount.push(doc.data().amount);
     });
 
-    const payloadJson = linePayload.checkReadyPayment(courseName, amount[0])
+    const payloadJson = linePayload.checkReadyPayment(courseId[0], courseName, amount[0]);
 
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);

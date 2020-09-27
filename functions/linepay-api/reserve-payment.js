@@ -3,26 +3,21 @@ const config = require("../config/config.json");
 const db = require("../database/database");
 
 const linePayload = require("../helper/payload");
-const { reply } = require("../helper/reply");
+const { push } = require("../helper/push");
 
-exports.reservePayment = async (
-  channelAccessToken,
-  replyToken,
-  courseId,
-  courseName,
-  amount,
-  userId
-) => {
+exports.reservePayment = async (channelAccessToken, courseId, courseName, amount, userId) => {
   let url = `${config.linepay.api}/v2/payments/request`;
   let orderId = await findOrderId(courseId, userId);
   //console.log(orderId);
   //console.log(userId);
+  //console.log(courseId);
   let payload = {
     productName: courseName,
     amount: amount,
     orderId: orderId,
     currency: "THB",
     confirmUrl: `${config.apiUrl}`,
+    //confirmUrl: `https://5b43db996cd2.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
     langCd: "th",
     confirmUrlType: "SERVER",
   };
@@ -55,7 +50,7 @@ exports.reservePayment = async (
         data.transactionId = transactionId;
         const message = linePayload.startPayment(courseName, amount, `${paymentUrl}`);
         saveTx(orderId, data);
-        return reply(channelAccessToken, replyToken, [message]);
+        push(channelAccessToken, userId, message);
       }
     })
     .catch((err) => {
