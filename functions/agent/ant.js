@@ -71,6 +71,10 @@ exports.webhook = async (req, res) => {
       const courseName = data.courseName;
       const amount = Number(data.amount);
       await linepay.reservePayment(channelAccessToken, courseId, courseName, amount, userId);
+      //Add wait message
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage("รอสักครู่.."),
+      ]);
     }
 
     if (data.action === "SEND_CHECK_ATTEND") {
