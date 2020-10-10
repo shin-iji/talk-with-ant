@@ -65,16 +65,14 @@ exports.webhook = async (req, res) => {
 
   if (events.type === "postback") {
     const data = querystring.parse(events.postback.data);
-    if (data.action === "RESERVE_PAYMENT") {
-      const userId = events.source.userId;
-      const courseId = data.courseId;
+
+    if (data.action === "CONFIRM_PAYMENT") {
       const courseName = data.courseName;
       const amount = Number(data.amount);
-      await linepay.reservePayment(channelAccessToken, courseId, courseName, amount, userId);
-      //Add wait message
-      await reply(channelAccessToken, events.replyToken, [
-        lineHelper.createTextMessage("รอสักครู่.."),
-      ]);
+      const paymentUrl = data.paymentUrl;
+      const message = linePayload.startPayment(courseName, amount, paymentUrl);
+      await reply(channelAccessToken, events.replyToken, [message]);
+      console.log(paymentUrl);
     }
 
     if (data.action === "SEND_CHECK_ATTEND") {

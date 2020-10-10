@@ -103,6 +103,7 @@ async function getUserInfo(courseName, orderId) {
     courseId = doc.id;
   });
   const userRef = db.collection(`Training Courses/${courseId}/users`).doc(`${orderId}`);
+  const changeStatus = await userRef.update({ paymentStatus: true });
   const doc = await userRef.get();
   let name = doc.data().name;
   let email = doc.data().email;

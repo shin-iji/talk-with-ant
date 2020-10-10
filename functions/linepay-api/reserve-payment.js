@@ -5,19 +5,15 @@ const db = require("../database/database");
 const linePayload = require("../helper/payload");
 const { push } = require("../helper/push");
 
-exports.reservePayment = async (channelAccessToken, courseId, courseName, amount, userId) => {
+exports.reservePayment = async (courseName, amount, orderId, userId) => {
   let url = `${config.linepay.api}/v2/payments/request`;
-  let orderId = await findOrderId(courseId, userId);
-  //console.log(orderId);
-  //console.log(userId);
-  //console.log(courseId);
   let payload = {
     productName: courseName,
     amount: amount,
     orderId: orderId,
     currency: "THB",
     confirmUrl: `${config.apiUrl}`,
-    //confirmUrl: `https://5b43db996cd2.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
+    //confirmUrl: `https://db45d745453f.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
     langCd: "th",
     confirmUrlType: "SERVER",
   };
@@ -37,6 +33,7 @@ exports.reservePayment = async (channelAccessToken, courseId, courseName, amount
     .then((response) => {
       console.log("reservePayment response", JSON.stringify(response));
       if (response && response.returnCode === "0000" && response.info) {
+        const paymentUrl = response.info.paymentUrl.web;
         const data = {
           userId: userId,
           orderId: orderId,
@@ -44,13 +41,11 @@ exports.reservePayment = async (channelAccessToken, courseId, courseName, amount
           amount: amount,
           currency: "THB",
           status: "not paid",
+          paymentUrl: paymentUrl,
         };
         const transactionId = response.info.transactionId;
-        const paymentUrl = response.info.paymentUrl.web;
         data.transactionId = transactionId;
-        const message = linePayload.startPayment(courseName, amount, `${paymentUrl}`);
         saveTx(orderId, data);
-        push(channelAccessToken, userId, message);
       }
     })
     .catch((err) => {
@@ -62,14 +57,4 @@ async function saveTx(orderId, object) {
   object["lastActionDate"] = Date().toString();
   const txRef = db.collection("Transactions").doc(`${orderId}`);
   const snapshot = await txRef.set(object);
-}
-
-async function findOrderId(courseId, userId) {
-  const orderId = [];
-  const userRef = db.collection(`Training Courses/${courseId}/users`);
-  const snapshot = await userRef.where("userId", "==", userId).get();
-  snapshot.forEach((doc) => {
-    orderId.push(doc.id);
-  });
-  return orderId[0];
 }

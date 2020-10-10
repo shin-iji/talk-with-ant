@@ -1,8 +1,9 @@
 const actionType = {
-  RESERVE_PAYMENT: "RESERVE_PAYMENT",
+  //RESERVE_PAYMENT: "RESERVE_PAYMENT",
   CHECK_ATTEND: "CHECK_ATTEND",
   SEND_CHECK_ATTEND: "SEND_CHECK_ATTEND",
   COUNT_ATTEND: "COUNT_ATTEND",
+  CONFIRM_PAYMENT: "CONFIRM_PAYMENT",
 };
 
 module.exports = {
@@ -92,7 +93,7 @@ module.exports = {
       },
     };
   },
-  checkReadyPayment: (courseId, courseName, amount) => {
+  checkReadyPayment: (courseId, courseName, amount, paymentUrl) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -146,7 +147,7 @@ module.exports = {
                   action: {
                     type: "postback",
                     label: "ต้องการ",
-                    data: `action=${actionType.RESERVE_PAYMENT}&courseId=${courseId}&courseName=${courseName}&amount=${amount}`,
+                    data: `action=${actionType.CONFIRM_PAYMENT}&courseId=${courseId}&courseName=${courseName}&amount=${amount}&paymentUrl=${paymentUrl}`,
                   },
                   position: "relative",
                   height: "md",
@@ -943,6 +944,88 @@ module.exports = {
               margin: "md",
             },
           ],
+        },
+      },
+    };
+  },
+  listPayment: (courseName, amount) => {
+    return {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "PAYMENT",
+            weight: "bold",
+            color: "#FF783E",
+            size: "sm",
+          },
+          {
+            type: "text",
+            text: `${courseName}`,
+            weight: "bold",
+            size: "xxl",
+            margin: "md",
+          },
+          {
+            type: "text",
+            text: "Training with ant",
+            size: "xs",
+            color: "#aaaaaa",
+            wrap: true,
+          },
+          {
+            type: "separator",
+            margin: "xxl",
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            margin: "xxl",
+            spacing: "sm",
+            contents: [
+              {
+                type: "box",
+                layout: "horizontal",
+                contents: [
+                  {
+                    type: "text",
+                    text: "cost",
+                    size: "md",
+                    flex: 0,
+                  },
+                  {
+                    type: "text",
+                    text: `${amount} (฿)`,
+                    align: "end",
+                    size: "md",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "separator",
+            margin: "xxl",
+          },
+          {
+            type: "button",
+            action: {
+              type: "uri",
+              label: "ชำระเงิน",
+              uri: "http://payment.com/",
+            },
+            color: "#FF783E",
+            style: "primary",
+            offsetTop: "10px",
+          },
+        ],
+      },
+      styles: {
+        footer: {
+          separator: true,
         },
       },
     };

@@ -1,9 +1,12 @@
 const { Payload } = require("dialogflow-fulfillment");
 const db = require("../database/database");
 const linePayload = require("../helper/payload");
+const linepay = require("../linepay-api/reserve-payment");
 
 module.exports = async (agent) => {
   try {
+    const session = agent.session;
+    const userId = session.split("/")[4];
     const courseName = agent.parameters.courseName;
     const courseRef = db.collection("Training Courses");
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
@@ -15,7 +18,28 @@ module.exports = async (agent) => {
       amount.push(doc.data().amount);
     });
 
-    const payloadJson = linePayload.checkReadyPayment(courseId[0], courseName, amount[0]);
+    const orderId = [];
+    const userRef = await courseRef
+      .doc(`${courseId[0]}`)
+      .collection("users")
+      .where("userId", "==", userId)
+      .get();
+    userRef.forEach((doc) => {
+      orderId.push(doc.id);
+    });
+
+    await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
+
+    const txRef = await db.collection("Transactions").doc(`${orderId}`).get();
+    const paymentUrl = txRef.data().paymentUrl;
+    //console.log(paymentUrl);
+
+    const payloadJson = linePayload.checkReadyPayment(
+      courseId[0],
+      courseName,
+      amount[0],
+      paymentUrl
+    );
 
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
