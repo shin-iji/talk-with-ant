@@ -21,6 +21,7 @@ const payment = require("./function_handler/check-ready-payment");
 const findCourseByDate = require("./function_handler/findCourseByDate");
 const sendCheckButton = require("./function_handler/send-check-button");
 const courseInfo = require("./function_handler/course-info");
+const listPayment = require("./function_handler/list-payment");
 
 const test = require("./function_handler/test");
 
@@ -35,6 +36,7 @@ exports.antDialogflowFulfillment = functions.https.onRequest((request, response)
   intentMap.set("Default Fallback Intent", fallback);
   intentMap.set("Listing", listCourses);
   intentMap.set("ShowInfo", courseInfo);
+  intentMap.set("List Payment", listPayment);
   intentMap.set("Test", test);
 
   //Payment

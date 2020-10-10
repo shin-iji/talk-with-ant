@@ -93,7 +93,7 @@ module.exports = {
       },
     };
   },
-  checkReadyPayment: (courseId, courseName, amount, paymentUrl) => {
+  checkReadyPayment: (courseName, amount) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -147,7 +147,7 @@ module.exports = {
                   action: {
                     type: "postback",
                     label: "ต้องการ",
-                    data: `action=${actionType.CONFIRM_PAYMENT}&courseId=${courseId}&courseName=${courseName}&amount=${amount}&paymentUrl=${paymentUrl}`,
+                    data: `action=${actionType.CONFIRM_PAYMENT}&courseName=${courseName}&amount=${amount}`,
                   },
                   position: "relative",
                   height: "md",
@@ -948,7 +948,7 @@ module.exports = {
       },
     };
   },
-  listPayment: (courseName, amount) => {
+  listPayment: (courseName, amount, paymentUrl) => {
     return {
       type: "bubble",
       body: {
@@ -1015,7 +1015,7 @@ module.exports = {
             action: {
               type: "uri",
               label: "ชำระเงิน",
-              uri: "http://payment.com/",
+              uri: `${paymentUrl}`,
             },
             color: "#FF783E",
             style: "primary",
