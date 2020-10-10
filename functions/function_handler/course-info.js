@@ -11,9 +11,13 @@ module.exports = async (agent) => {
     let url = doc.data().pictureUrl;
     let desc = doc.data().description;
     let max = doc.data().maxPar;
+    let available = doc.data().avaiPar;
     let date = doc.data().date;
     let amount = doc.data().amount;
-    payloadJson = linePayload.courseInfo(courseName, url, desc, max, date, amount);
+    if (available === 0) {
+      available = "Full";
+    }
+    payloadJson = linePayload.courseInfo(courseName, url, desc, max, available, date, amount);
   });
   let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
   agent.add(payload);

@@ -631,7 +631,7 @@ module.exports = {
       },
     };
   },
-  courseInfo: (courseName, url, desc, max, date, amount) => {
+  courseInfo: (courseName, url, desc, max, available, date, amount) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -730,6 +730,34 @@ module.exports = {
               contents: [
                 {
                   type: "text",
+                  text: "Available Participant",
+                  weight: "bold",
+                  color: "#FF783E",
+                },
+                {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "text",
+                      text: `${available} Participant`,
+                      offsetStart: "20px",
+                    },
+                  ],
+                },
+              ],
+              offsetTop: "10px",
+            },
+            {
+              type: "separator",
+              margin: "xl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "text",
                   text: "Date",
                   weight: "bold",
                   color: "#FF783E",
@@ -786,7 +814,7 @@ module.exports = {
               action: {
                 type: "uri",
                 label: "Register",
-                uri: "https://liff.line.me/1654378227-QwAzgAb0",
+                uri: "https://liff.line.me/1654378227-QwAzgAb0?courseId=0fVrsm1zy8vGkjuiYmqv",
               },
               style: "primary",
               color: "#FF783E",
