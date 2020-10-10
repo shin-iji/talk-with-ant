@@ -14,6 +14,7 @@ const { detectIntent } = require("./src/detect-intent");
 const { sendCheckAttend } = require("./src/send-check-attend");
 const { checkAttend } = require("./src/check-attend");
 const { countAttend } = require("./src/count-attend");
+const { getPaymentUrl } = require("./src/get-payment-url");
 
 //Line Pay
 const linepay = require("../linepay-api/reserve-payment");
@@ -69,7 +70,7 @@ exports.webhook = async (req, res) => {
     if (data.action === "CONFIRM_PAYMENT") {
       const courseName = data.courseName;
       const amount = Number(data.amount);
-      const paymentUrl = data.paymentUrl;
+      const paymentUrl = await getPaymentUrl(courseName);
       const message = linePayload.startPayment(courseName, amount, paymentUrl);
       await reply(channelAccessToken, events.replyToken, [message]);
       console.log(paymentUrl);

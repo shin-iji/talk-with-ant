@@ -30,16 +30,7 @@ module.exports = async (agent) => {
 
     await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
 
-    const txRef = await db.collection("Transactions").doc(`${orderId}`).get();
-    const paymentUrl = txRef.data().paymentUrl;
-    //console.log(paymentUrl);
-
-    const payloadJson = linePayload.checkReadyPayment(
-      courseId[0],
-      courseName,
-      amount[0],
-      paymentUrl
-    );
+    const payloadJson = linePayload.checkReadyPayment(courseName, amount[0]);
 
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
