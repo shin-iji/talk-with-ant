@@ -93,7 +93,7 @@ module.exports = {
       },
     };
   },
-  checkReadyPayment: (courseName, amount) => {
+  checkReadyPayment: (courseName, orderId, amount) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -147,7 +147,7 @@ module.exports = {
                   action: {
                     type: "postback",
                     label: "ต้องการ",
-                    data: `action=${actionType.CONFIRM_PAYMENT}&courseName=${courseName}&amount=${amount}`,
+                    data: `action=${actionType.CONFIRM_PAYMENT}&courseName=${courseName}&orderId=${orderId}&amount=${amount}`,
                   },
                   position: "relative",
                   height: "md",

@@ -30,7 +30,7 @@ module.exports = async (agent) => {
 
     await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
 
-    const payloadJson = linePayload.checkReadyPayment(courseName, amount[0]);
+    const payloadJson = linePayload.checkReadyPayment(courseName, orderId[0], amount[0]);
 
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);

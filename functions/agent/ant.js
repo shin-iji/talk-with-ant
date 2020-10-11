@@ -69,11 +69,12 @@ exports.webhook = async (req, res) => {
 
     if (data.action === "CONFIRM_PAYMENT") {
       const courseName = data.courseName;
+      const orderId = data.orderId;
       const amount = Number(data.amount);
-      const paymentUrl = await getPaymentUrl(courseName);
+      const paymentUrl = await getPaymentUrl(orderId);
+      //console.log(courseName);
       const message = linePayload.startPayment(courseName, amount, paymentUrl);
       await reply(channelAccessToken, events.replyToken, [message]);
-      console.log(paymentUrl);
     }
 
     if (data.action === "SEND_CHECK_ATTEND") {
