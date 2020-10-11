@@ -3,7 +3,9 @@ const db = require("../../database/database");
 const createUser = async (req, res) => {
   try {
     const { courseName, userId, name, tel, email } = req.body;
-    const timestamp = Date().toString();
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+    const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
     const data = {
       courseName,
       userId,
