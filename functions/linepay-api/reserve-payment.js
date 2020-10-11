@@ -54,7 +54,10 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
 };
 
 async function saveTx(orderId, object) {
-  object["lastActionDate"] = Date().toString();
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+  const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
+  object["lastActionDate"] = timestamp;
   const txRef = db.collection("Transactions").doc(`${orderId}`);
   const snapshot = await txRef.set(object);
 }
