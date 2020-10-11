@@ -89,12 +89,18 @@ async function getOrderInfo(orderId) {
 }
 
 async function getOwnerId(courseName) {
+  let courseId = [];
   let ownerId = [];
+  let aviPar = [];
   const courseRef = db.collection("Training Courses");
   const snapshot = await courseRef.where("courseName", "==", courseName).get();
   snapshot.forEach((doc) => {
+    courseId.push(doc.id);
     ownerId.push(doc.data().ownerId);
+    aviPar.push(doc.data().avaiPar);
   });
+  await courseRef.doc(`${courseId[0]}`).update({ avaiPar: aviPar[0] - 1 });
+
   return ownerId[0];
 }
 
@@ -106,7 +112,7 @@ async function getUserInfo(courseName, orderId) {
     courseId = doc.id;
   });
   const userRef = db.collection(`Training Courses/${courseId}/users`).doc(`${orderId}`);
-  const changeStatus = await userRef.update({ paymentStatus: true });
+  await userRef.update({ paymentStatus: true });
   const doc = await userRef.get();
   let name = doc.data().name;
   let email = doc.data().email;
