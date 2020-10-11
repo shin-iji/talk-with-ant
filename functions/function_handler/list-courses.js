@@ -5,15 +5,28 @@ const lineHelper = require("../helper/line-helper");
 
 module.exports = async (agent) => {
   try {
+    const today = Date.parse(new Date());
     const courseRef = await db.collection("Training Courses").get();
     const courses = [];
+    const contents = [];
     courseRef.forEach((doc) => {
-      let url = doc.data().pictureUrl;
+      let pictureUrl = doc.data().pictureUrl;
       let courseName = doc.data().courseName;
       let date = doc.data().date;
-      courses.push(linePayload.listCourses(url, courseName, date));
+      courses.push({
+        pictureUrl,
+        courseName,
+        date,
+      });
     });
-    const payloadJson = lineHelper.createFlexCarouselMessage("List Course", courses);
+    for (let i = 0; i < courses.length; i++) {
+      const doc = courses[i];
+      if (Date.parse(`${doc.date}`) < `${today}`) {
+        continue;
+      }
+      contents.push(linePayload.listCourses(doc.pictureUrl, doc.courseName, doc.date));
+    }
+    const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
   } catch (error) {
