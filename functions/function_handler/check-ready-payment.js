@@ -1,6 +1,4 @@
-const { Payload } = require("dialogflow-fulfillment");
 const db = require("../database/database");
-const linePayload = require("../helper/payload");
 const linepay = require("../linepay-api/reserve-payment");
 
 module.exports = async (agent) => {
@@ -29,10 +27,15 @@ module.exports = async (agent) => {
     userRef.forEach((doc) => {
       orderId.push(doc.id);
     });
-    //filter not have amount
 
-    await courseRef.doc(`${courseId[0]}`).update({ avaiPar: aviPar[0] - 1 });
-    await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
+    await courseRef.doc(`${courseId[0]}`).update({ avaiPar: avaiPar[0] - 1 });
+
+    if (amount[0] === undefined) {
+      agent.add("สมัครเสร็จแล้ว");
+      agent.add("ต้องการทำอะไรต่อบอกได้นะ");
+    } else {
+      await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
+    }
   } catch (error) {
     console.error(error);
   }
