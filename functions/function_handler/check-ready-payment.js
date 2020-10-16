@@ -12,10 +12,12 @@ module.exports = async (agent) => {
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     const courseId = [];
     const amount = [];
+    const avaiPar = [];
 
     snapshot.forEach((doc) => {
       courseId.push(doc.id);
       amount.push(doc.data().amount);
+      avaiPar.push(doc.data().avaiPar);
     });
 
     const orderId = [];
@@ -29,8 +31,8 @@ module.exports = async (agent) => {
     });
     //filter not have amount
 
+    await courseRef.doc(`${courseId[0]}`).update({ avaiPar: aviPar[0] - 1 });
     await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
-
   } catch (error) {
     console.error(error);
   }
