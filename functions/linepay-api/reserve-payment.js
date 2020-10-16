@@ -12,8 +12,8 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
     amount: amount,
     orderId: orderId,
     currency: "THB",
-    //confirmUrl: `${config.apiUrl}`,
-    confirmUrl: `https://49a2b230491d.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
+    confirmUrl: `${config.apiUrl}`,
+    //confirmUrl: `https://49a2b230491d.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
     langCd: "th",
     confirmUrlType: "SERVER",
   };
@@ -46,6 +46,8 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
         const transactionId = response.info.transactionId;
         data.transactionId = transactionId;
         saveTx(orderId, data);
+        const payloadJson = linePayload.checkReadyPayment(courseName, orderId, amount); //Change to this file
+        push(userId, payloadJson);
       }
     })
     .catch((err) => {

@@ -27,13 +27,10 @@ module.exports = async (agent) => {
     userRef.forEach((doc) => {
       orderId.push(doc.id);
     });
+    //filter not have amount
 
     await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
 
-    const payloadJson = linePayload.checkReadyPayment(courseName, orderId[0], amount[0]);
-
-    let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-    agent.add(payload);
   } catch (error) {
     console.error(error);
   }
