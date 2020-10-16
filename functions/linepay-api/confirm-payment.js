@@ -1,11 +1,15 @@
 const request = require("request-promise");
-const config = require("../config/config.json");
-const db = require("../database/database");
 const lineSdk = require("@line/bot-sdk");
+
+const config = require("../config/config.json");
 const line = new lineSdk.Client(config.line);
+const db = require("../database/database");
 const lineHelper = require("../helper/line-helper");
 const linePayload = require("../helper/payload");
 const { push } = require("../helper/push");
+const { sendUserInfo } = require("../helper/send-user-info");
+const { getOwnerId } = require("../helper/get-owner-id");
+
 const channelAccessToken =
   "n8oGQGp/o7wCxPkhGpCdQFzO1XJdbMIYl5nb4tq5hfDy9yPivTrjKK6ytE8yiSIONUhB1gwVy30jO6PCIVhnjNORCjUcCH05txDrn1vsfZqCsq9ENIkW1bO4QjqCFeq/14j9SWV1XCIQSICxpF6BSwdB04t89/1O/w1cDnyilFU=";
 
@@ -22,7 +26,7 @@ module.exports = async (req, res) => {
     getOrderInfo(orderId).then(async (orderInfo) => {
       data = orderInfo;
       let ownerId = await getOwnerId(data.productName);
-      let userInfo = await getUserInfo(data.productName, orderId);
+      let userInfo = await sendUserInfo(data.productName, orderId);
       let body = {
         amount: data.amount,
         currency: "THB",
@@ -86,34 +90,4 @@ async function getOrderInfo(orderId) {
   });
 
   return list[0];
-}
-
-async function getOwnerId(courseName) {
-  let courseId = [];
-  let ownerId = [];
-
-  const courseRef = db.collection("Training Courses");
-  const snapshot = await courseRef.where("courseName", "==", courseName).get();
-  snapshot.forEach((doc) => {
-    courseId.push(doc.id);
-    ownerId.push(doc.data().ownerId);
-  });
-
-  return ownerId[0];
-}
-
-async function getUserInfo(courseName, orderId) {
-  let courseId;
-  const courseRef = db.collection("Training Courses");
-  const snapshot = await courseRef.where("courseName", "==", courseName).get();
-  snapshot.forEach((doc) => {
-    courseId = doc.id;
-  });
-  const userRef = db.collection(`Training Courses/${courseId}/users`).doc(`${orderId}`);
-  await userRef.update({ paymentStatus: true });
-  const doc = await userRef.get();
-  let name = doc.data().name;
-  let email = doc.data().email;
-  let tel = doc.data().tel;
-  return linePayload.sendUserInfo(name, email, tel, courseName);
 }
