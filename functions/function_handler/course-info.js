@@ -17,6 +17,9 @@ module.exports = async (agent) => {
     if (available === 0) {
       available = "Full";
     }
+    if (amount === undefined) {
+      amount = "Free";
+    }
     payloadJson = linePayload.courseInfo(courseName, url, desc, max, available, date, amount);
   });
   let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
