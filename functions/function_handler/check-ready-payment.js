@@ -45,6 +45,7 @@ module.exports = async (agent) => {
       agent.add("สมัครเสร็จแล้ว");
       agent.add("ต้องการทำอะไรต่อบอกได้นะ");
     } else {
+      agent.add("รอสักครู่..");
       await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
     }
   } catch (error) {
