@@ -1,3 +1,6 @@
+const channelAccessToken =
+  "Vu77dg2yeZmRwqJVjFpjXNGNMioOULYF6Qr9rXoNKLdHbCehW8Zlhdm4G9rpa5DYl4+kEjJXUVJCJOYsGehD+SNZBjR1gEAWltUjPEB6lL1i4T0ZNLilN85JSO92C22IBVVsnSQ7IxuYbWqQQMOUPwdB04t89/1O/w1cDnyilFU=";
+
 const request = require("request-promise");
 const config = require("../config/config.json");
 const db = require("../database/database");
@@ -46,8 +49,8 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
         const transactionId = response.info.transactionId;
         data.transactionId = transactionId;
         saveTx(orderId, data);
-        const payloadJson = linePayload.checkReadyPayment(courseName, orderId, amount); //Change to this file
-        push(userId, payloadJson);
+        const payloadJson = linePayload.checkReadyPayment(courseName, orderId, amount);
+        push(channelAccessToken, userId, payloadJson);
       }
     })
     .catch((err) => {
