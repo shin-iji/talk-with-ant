@@ -613,9 +613,9 @@ module.exports = {
               {
                 type: "button",
                 action: {
-                  type: "uri",
+                  type: "message",
                   label: "สมัคร",
-                  uri: "https://liff.line.me/1654378227-QwAzgAb0",
+                  text: `สมัคร ${courseName}`,
                 },
                 position: "relative",
                 height: "md",
@@ -813,9 +813,9 @@ module.exports = {
             {
               type: "button",
               action: {
-                type: "uri",
+                type: "message",
                 label: "Register",
-                uri: "https://liff.line.me/1654378227-QwAzgAb0?courseId=0fVrsm1zy8vGkjuiYmqv",
+                text: `สมัคร ${courseName}`,
               },
               style: "primary",
               color: "#FF783E",
