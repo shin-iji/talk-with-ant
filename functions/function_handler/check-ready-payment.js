@@ -26,12 +26,9 @@ module.exports = async (agent) => {
     });
 
     const orderId = [];
-    const userRef = await courseRef
-      .doc(`${courseId[0]}`)
-      .collection("users")
-      .where("userId", "==", userId)
-      .get();
-    userRef.forEach((doc) => {
+    const userRef = courseRef.doc(`${courseId[0]}`).collection("users");
+    const userSnapshot = await userRef.where("userId", "==", userId).get();
+    userSnapshot.forEach((doc) => {
       orderId.push(doc.id);
     });
 
@@ -41,6 +38,7 @@ module.exports = async (agent) => {
     const userInfo = await sendUserInfo(courseName, orderId[0]);
 
     if (amount[0] === undefined) {
+      await userRef.doc(`${orderId[0]}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
       agent.add("สมัครเสร็จแล้ว");
       agent.add("ต้องการทำอะไรต่อบอกได้นะ");
