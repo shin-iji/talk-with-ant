@@ -472,7 +472,7 @@ module.exports = {
                   action: {
                     type: "postback",
                     label: "เริ่มเช็คชื่อ",
-                    data: `action=${actionType.SEND_CHECK_ATTEND}&courseName=${courseName}&courseId=${courseId}`,
+                    data: `action=${actionType.SEND_CHECK_ATTEND}&courseId=${courseId}&courseName=${courseName}`,
                   },
                   style: "primary",
                   color: "#FF783E",

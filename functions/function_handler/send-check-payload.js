@@ -15,7 +15,8 @@ module.exports = async (agent) => {
       courseName.push(doc.data().courseName);
       courseId.push(doc.id);
     });
-    const payloadJson = linePayload.sendCheckAttend(courseId[0], courseName[0], date);
+    //console.log(courseName[0]);
+    const payloadJson = linePayload.sendCheckAttend(courseId[0], courseName[0]);
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
   } catch (error) {

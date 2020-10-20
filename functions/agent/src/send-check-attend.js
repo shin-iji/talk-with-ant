@@ -3,15 +3,14 @@ const { multicast } = require("../../helper/multicast");
 const linePayload = require("../../helper/payload");
 
 exports.sendCheckAttend = async (courseId, courseName) => {
-  let userId = [];
-  const txRef = db.collection("Transactions");
-  const snapshot = await txRef
-    .where("status", "==", "paid")
-    .where("productName", "==", courseName)
-    .get();
+  const userId = [];
+  const userRef = db.collection(`Training Courses/${courseId}/users`);
+
+  const snapshot = await userRef.where("paymentStatus", "==", true).get();
   snapshot.forEach((doc) => {
     userId.push(doc.data().userId);
+    console.log(doc.id);
   });
-  console.log(userId);
+
   await multicast(userId, linePayload.checkAttend(courseId, courseName));
 };

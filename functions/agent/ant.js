@@ -56,7 +56,7 @@ exports.webhook = async (req, res) => {
       "th"
     );
     const replyMessage = await convertStruct(intentResponse);
-
+    //console.log(replyMessage);
     await reply(channelAccessToken, event.replyToken, replyMessage);
   }
 
@@ -80,7 +80,7 @@ exports.webhook = async (req, res) => {
     if (data.action === "SEND_CHECK_ATTEND") {
       const courseId = data.courseId;
       const courseName = data.courseName;
-      console.log(events.replyToken);
+      console.log(courseName);
       sendCheckAttend(courseId, courseName);
       await reply(channelAccessToken, events.replyToken, [
         lineHelper.createTextMessage("ส่งเช็คชื่อเรียบร้อย สามารถเช็คยอดได้ที่ปุ่มเลยนะ"),
