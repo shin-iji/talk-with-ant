@@ -547,11 +547,12 @@ module.exports = {
   listCourses: (url, courseName, date) => {
     return {
       type: "bubble",
+      size: "kilo",
       hero: {
         type: "image",
+        url: `${url}`,
         size: "full",
         aspectMode: "fit",
-        url: `${url}`,
       },
       body: {
         type: "box",
@@ -563,7 +564,7 @@ module.exports = {
             contents: [
               {
                 type: "text",
-                text: `${courseName} :`,
+                text: `${courseName}: `,
                 size: "sm",
               },
               {
@@ -579,33 +580,6 @@ module.exports = {
             margin: "md",
             color: "#878787",
           },
-        ],
-      },
-      footer: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "box",
-            layout: "horizontal",
-            contents: [
-              {
-                type: "button",
-                action: {
-                  type: "message",
-                  label: "รายละเอียด",
-                  text: `รายละเอียด ${courseName}`,
-                },
-                position: "relative",
-                height: "md",
-                style: "primary",
-                color: "#FF783E",
-              },
-            ],
-            position: "absolute",
-            width: "115px",
-            offsetStart: "21px",
-          },
           {
             type: "box",
             layout: "horizontal",
@@ -617,18 +591,29 @@ module.exports = {
                   label: "สมัคร",
                   text: `สมัคร ${courseName}`,
                 },
-                position: "relative",
-                height: "md",
                 style: "primary",
                 color: "#FF783E",
               },
+              {
+                type: "button",
+                action: {
+                  type: "message",
+                  label: "ดูข้อมูล",
+                  text: `รายละเอียด ${courseName}`,
+                },
+                style: "secondary",
+                offsetStart: "none",
+                margin: "5px",
+              },
             ],
-            width: "115px",
-            position: "absolute",
-            offsetStart: "150px",
+            margin: "lg",
           },
         ],
-        height: "65px",
+      },
+      styles: {
+        footer: {
+          separator: false,
+        },
       },
     };
   },
