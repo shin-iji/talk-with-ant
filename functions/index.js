@@ -24,6 +24,7 @@ const courseInfo = require("./function_handler/course-info");
 const listPayment = require("./function_handler/list-payment");
 const checkUserData = require("./function_handler/check-user-data");
 const register = require("./function_handler/register");
+const registerForm = require("./function_handler/register-form");
 
 const test = require("./function_handler/test");
 
@@ -41,6 +42,7 @@ exports.antDialogflowFulfillment = functions.https.onRequest((request, response)
   intentMap.set("List Payment", listPayment);
   intentMap.set("Register", checkUserData);
   intentMap.set("Register - yes", register);
+  intentMap.set("Register - no", registerForm);
   intentMap.set("Test", test);
 
   //Payment
