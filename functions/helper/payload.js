@@ -1030,4 +1030,159 @@ module.exports = {
       },
     };
   },
+  userInfo: (name, tel, email) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "Talkwithant",
+              weight: "bold",
+              color: "#FF783E",
+              size: "sm",
+            },
+            {
+              type: "text",
+              text: "ข้อมูลส่วนตัว",
+              weight: "bold",
+              size: "xxl",
+              margin: "md",
+            },
+            {
+              type: "text",
+              text: "จากการสมัครกับเราครั้งก่อน",
+              size: "xs",
+              color: "#aaaaaa",
+              wrap: true,
+            },
+            {
+              type: "separator",
+              margin: "xxl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              margin: "xxl",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "ชื่อ",
+                      size: "sm",
+                      color: "#555555",
+                    },
+                    {
+                      type: "text",
+                      text: `${name}`,
+                      size: "sm",
+                      color: "#111111",
+                      align: "end",
+                    },
+                  ],
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "เบอร์ติดต่อ",
+                      size: "sm",
+                      color: "#555555",
+                    },
+                    {
+                      type: "text",
+                      text: `${tel}`,
+                      size: "sm",
+                      color: "#111111",
+                      align: "end",
+                    },
+                  ],
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "อีเมล",
+                      size: "sm",
+                      color: "#555555",
+                    },
+                    {
+                      type: "text",
+                      text: `${email}`,
+                      size: "sm",
+                      color: "#111111",
+                      align: "end",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "separator",
+              margin: "xxl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "text",
+                  text: "ท่านต้องการใช้ข้อมูลนี้ในการสมัครหรือไม่ ?",
+                  wrap: true,
+                  margin: "lg",
+                  size: "sm",
+                  align: "center",
+                },
+              ],
+            },
+            {
+              type: "box",
+              layout: "horizontal",
+              margin: "md",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "message",
+                    label: "ต้องการ",
+                    text: "ต้องการ",
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                },
+                {
+                  type: "button",
+                  action: {
+                    type: "message",
+                    label: "ไม่ต้องการ",
+                    text: "ไม่ต้องการ",
+                  },
+                  style: "secondary",
+                  margin: "5px",
+                },
+              ],
+            },
+          ],
+        },
+        styles: {
+          footer: {
+            separator: true,
+          },
+        },
+      },
+    };
+  },
 };
