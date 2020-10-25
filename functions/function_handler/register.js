@@ -62,12 +62,15 @@ module.exports = async (agent) => {
 
     const ownerId = await getOwnerId(courseName);
     const userInfo = await sendUserInfo(courseName, orderId);
+    const userRef = courseRef.doc(`${courseId}`).collection("users");
 
     if (amount === undefined) {
       await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
-      agent.add("ต้องการทำอะไรต่อบอกได้นะ");
+      let payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add(payload);
     } else {
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("รอสักครู่..");

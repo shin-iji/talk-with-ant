@@ -1,6 +1,8 @@
+const { Payload } = require("dialogflow-fulfillment");
 const db = require("../database/database");
 const linepay = require("../linepay-api/reserve-payment");
 const { push } = require("../helper/push");
+const linePayload = require("../helper/payload");
 
 const { sendUserInfo } = require("../helper/send-user-info");
 const { getOwnerId } = require("../helper/get-owner-id");
@@ -40,8 +42,9 @@ module.exports = async (agent) => {
     if (amount === undefined) {
       await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
-      agent.add("สมัครเสร็จแล้ว");
-      agent.add("ต้องการทำอะไรต่อบอกได้นะ");
+      let payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add(payload);
     } else {
       agent.add("รอสักครู่..");
       await linepay.reservePayment(courseName, amount, orderId, userId);

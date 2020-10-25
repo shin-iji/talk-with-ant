@@ -258,25 +258,25 @@ module.exports = {
   askTodoAnything: () => {
     return {
       type: "text",
-      text: "ต้องการทำอะไรอีกมั้ย",
+      text: "ต้องการทำอะไรต่อบอกได้นะ",
       quickReply: {
         items: [
           {
             type: "action",
-            imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
+            //imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
             action: {
               type: "message",
-              label: "ต้องการ",
-              text: "ต้องการ",
+              label: "รายการอบรม",
+              text: "รายการอบรม",
             },
           },
           {
             type: "action",
-            imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
+            //imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
             action: {
               type: "message",
-              label: "ไม่ต้องการ",
-              text: "ไม่ต้องการ",
+              label: "รายการที่ต้องจ่าย",
+              text: "รายการที่ต้องจ่าย",
             },
           },
         ],
