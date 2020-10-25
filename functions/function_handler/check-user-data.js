@@ -7,37 +7,39 @@ module.exports = async (agent) => {
     const session = agent.session;
     const userId = session.split("/")[4];
     const courseName = agent.parameters.courseName;
-    const courseId = [];
-    const orderId = [];
+    let courseId;
+    let orderId;
 
     const courseRef = db.collection("Training Courses");
 
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
-      courseId.push(doc.id);
+      courseId = doc.id;
     });
 
     const userRef = await courseRef
-      .doc(`${courseId[0]}`)
+      .doc(`${courseId}`)
       .collection("users")
       .where("userId", "==", userId)
       .get();
     userRef.forEach((doc) => {
-      orderId.push(doc.id);
+      orderId = doc.id;
     });
 
-    if (orderId[0]) {
+    if (orderId) {
       agent.add("คุณสมัครคอร์สนี้ไปแล้วน้า ลองดูคอร์สอื่นนะ");
     } else {
       const userColleRef = await db.collection("Users").doc(`${userId}`).get();
+      let payloadJson;
       if (userColleRef.data() === undefined) {
-        agent.add("สมัคร");
-        agent.add(`https://liff.line.me/1654378227-QwAzgAb0/enrollcourse?courseId=${courseId[0]}`);
+        payloadJson = linePayload.formButton(courseName, courseId);
+        let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+        agent.add(payload);
       } else {
         const name = userColleRef.data().name;
         const tel = userColleRef.data().tel;
         const email = userColleRef.data().email;
-        const payloadJson = linePayload.userInfo(name, tel, email);
+        payloadJson = linePayload.userInfo(name, tel, email);
         let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
         agent.add(payload);
       }

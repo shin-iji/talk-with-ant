@@ -1170,4 +1170,67 @@ module.exports = {
       },
     };
   },
+  formButton: (courseName, courseId) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "REGISTER",
+              weight: "bold",
+              color: "#FF783E",
+              size: "sm",
+            },
+            {
+              type: "text",
+              text: `${courseName}`,
+              weight: "bold",
+              size: "xxl",
+              margin: "md",
+            },
+            {
+              type: "text",
+              text: "Training with ant",
+              size: "xs",
+              color: "#aaaaaa",
+              wrap: true,
+            },
+            {
+              type: "separator",
+              margin: "xxl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              margin: "xxl",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "uri",
+                    label: "สมัคร",
+                    uri: `https://liff.line.me/1654378227-QwAzgAb0/enrollcourse?courseId=${courseId}`,
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                },
+              ],
+            },
+          ],
+        },
+        styles: {
+          footer: {
+            separator: true,
+          },
+        },
+      },
+    };
+  },
 };
