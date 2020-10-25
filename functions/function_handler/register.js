@@ -69,6 +69,7 @@ module.exports = async (agent) => {
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("ต้องการทำอะไรต่อบอกได้นะ");
     } else {
+      agent.add("รอสักครู่..");
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
     }
