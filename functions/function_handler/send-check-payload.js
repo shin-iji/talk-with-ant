@@ -7,16 +7,16 @@ module.exports = async (agent) => {
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const date = today.toLocaleDateString(); // "6/14/2020"
-    let courseName = [];
-    let courseId = [];
+    let courseName;
+    let courseId;
     const courseRef = db.collection("Training Courses");
     const snapshot = await courseRef.where("date", "==", date).get();
     snapshot.forEach((doc) => {
-      courseName.push(doc.data().courseName);
-      courseId.push(doc.id);
+      courseName=doc.data().courseName;
+      courseId=doc.id;
     });
     //console.log(courseName[0]);
-    const payloadJson = linePayload.sendCheckAttend(courseId[0], courseName[0]);
+    const payloadJson = linePayload.sendCheckAttend(courseId, courseName);
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
   } catch (error) {

@@ -9,7 +9,7 @@ exports.sendCheckAttend = async (courseId, courseName) => {
   const snapshot = await userRef.where("paymentStatus", "==", true).get();
   snapshot.forEach((doc) => {
     userId.push(doc.data().userId);
-    console.log(doc.id);
+    //console.log(doc.id);
   });
 
   await multicast(userId, linePayload.checkAttend(courseId, courseName));

@@ -31,47 +31,47 @@ module.exports = async (agent) => {
       paymentStatus: false,
     };
 
-    const courseId = [];
-    const amount = [];
-    const avaiPar = [];
+    let courseId;
+    let amount;
+    let avaiPar;
 
     const courseRef = db.collection("Training Courses");
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
-      courseId.push(doc.id);
-      amount.push(doc.data().amount);
-      avaiPar.push(doc.data().avaiPar);
+      courseId = doc.id;
+      amount = doc.data().amount;
+      avaiPar = doc.data().avaiPar;
     });
 
-    await courseRef.doc(`${courseId[0]}`).update({ avaiPar: avaiPar[0] - 1 });
+    await courseRef.doc(`${courseId}`).update({ avaiPar: avaiPar - 1 });
 
-    await courseRef.doc(`${courseId[0]}`).collection("users").doc().set(data);
+    await courseRef.doc(`${courseId}`).collection("users").doc().set(data);
 
-    const orderId = [];
+    let orderId;
 
     courseRef
-      .doc(`${courseId[0]}`)
+      .doc(`${courseId}`)
       .collection("users")
       .where("userId", "==", userId)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          orderId.push(doc.id);
+          orderId = doc.id;
         });
       });
 
     const ownerId = await getOwnerId(courseName);
-    const userInfo = await sendUserInfo(courseName, orderId[0]);
+    const userInfo = await sendUserInfo(courseName, orderId);
 
-    if (amount[0] === undefined) {
-      await userRef.doc(`${orderId[0]}`).update({ paymentStatus: true });
+    if (amount === undefined) {
+      await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("ต้องการทำอะไรต่อบอกได้นะ");
     } else {
-      agent.add("รอสักครู่..");
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
-      await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
+      agent.add("รอสักครู่..");
+      await linepay.reservePayment(courseName, amount, orderId, userId);
     }
   } catch (error) {
     console.log(error);

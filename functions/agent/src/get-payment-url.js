@@ -1,11 +1,11 @@
 const db = require("../../database/database");
 
 exports.getPaymentUrl = async (orderId) => {
-  const paymentUrl = [];
+  let paymentUrl;
   const txRef = db.collection(`Transactions`);
   const snapshot = await txRef.where("orderId", "==", orderId).get();
   snapshot.forEach((doc) => {
-    paymentUrl.push(doc.data().paymentUrl);
+    paymentUrl = doc.data().paymentUrl;
   });
-  return paymentUrl[0];
+  return paymentUrl;
 };

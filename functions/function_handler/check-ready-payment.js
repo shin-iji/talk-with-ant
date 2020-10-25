@@ -15,36 +15,36 @@ module.exports = async (agent) => {
     const courseName = agent.parameters.courseName;
     const courseRef = db.collection("Training Courses");
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
-    const courseId = [];
-    const amount = [];
-    const avaiPar = [];
+    let courseId;
+    let amount;
+    let avaiPar;
 
     snapshot.forEach((doc) => {
-      courseId.push(doc.id);
-      amount.push(doc.data().amount);
-      avaiPar.push(doc.data().avaiPar);
+      courseId = doc.id;
+      amount = doc.data().amount;
+      avaiPar = doc.data().avaiPar;
     });
 
-    const orderId = [];
-    const userRef = courseRef.doc(`${courseId[0]}`).collection("users");
+    let orderId;
+    const userRef = courseRef.doc(`${courseId}`).collection("users");
     const userSnapshot = await userRef.where("userId", "==", userId).get();
     userSnapshot.forEach((doc) => {
-      orderId.push(doc.id);
+      orderId = doc.id;
     });
 
-    await courseRef.doc(`${courseId[0]}`).update({ avaiPar: avaiPar[0] - 1 });
+    await courseRef.doc(`${courseId}`).update({ avaiPar: avaiPar - 1 });
 
     const ownerId = await getOwnerId(courseName);
-    const userInfo = await sendUserInfo(courseName, orderId[0]);
+    const userInfo = await sendUserInfo(courseName, orderId);
 
-    if (amount[0] === undefined) {
-      await userRef.doc(`${orderId[0]}`).update({ paymentStatus: true });
+    if (amount === undefined) {
+      await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
       agent.add("สมัครเสร็จแล้ว");
       agent.add("ต้องการทำอะไรต่อบอกได้นะ");
     } else {
       agent.add("รอสักครู่..");
-      await linepay.reservePayment(courseName, amount[0], orderId[0], userId);
+      await linepay.reservePayment(courseName, amount, orderId, userId);
     }
   } catch (error) {
     console.error(error);
