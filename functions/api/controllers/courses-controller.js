@@ -1,4 +1,5 @@
-const db = require("../../database/database");
+const { db, storage } = require("../../database/database");
+const bucket = storage.bucket();
 
 const getAllCourses = async (req, res) => {
   try {
@@ -29,21 +30,57 @@ const getCourse = async (req, res) => {
   }
 };
 
-const createCourse = async (req, res) => {
+const createCourse = async (req, res, next) => {
   try {
-    const { ownerId, name, date, place } = req.body;
+    const {
+      ownerId,
+      courseName,
+      date,
+      location,
+      amount,
+      description,
+      trainerName,
+      maxPar,
+    } = req.body;
+    const file = req.files[0];
+
+    const fileName = `${courseName.split(" ").join("_")}`;
+    const fileUpload = bucket.file(fileName);
+    const blobStream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    blobStream.on("error", (err) => {
+      res.status(405).json(err);
+    });
+
+    blobStream.on("finish", () => {
+      // res.status(200).send("Upload complete!");
+      return next();
+    });
+
+    blobStream.end(file.buffer);
+
     const data = {
       ownerId,
-      name,
+      courseName,
       date,
-      place,
+      amount,
+      currency: "THB",
+      description,
+      location,
+      trainerName,
+      maxPar,
+      avaiPar: maxPar,
     };
-    const courseRef = await db.collection("Training Courses").add(data);
-    const course = await courseRef.get();
 
-    res.json({
-      id: courseRef.id,
-      data: course.data(),
+    const courseRef = await db.collection("Training Courses").doc().set(data);
+
+    res.status(200).json({
+      message: "success",
+      data,
     });
   } catch (error) {
     res.status(500).send(error);
