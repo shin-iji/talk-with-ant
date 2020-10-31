@@ -1,4 +1,4 @@
-const db = require("../../database/database");
+const { db } = require("../../database/database");
 
 exports.checkAttend = async (userId, courseId) => {
   let orderId;

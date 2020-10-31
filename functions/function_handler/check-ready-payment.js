@@ -1,5 +1,5 @@
 const { Payload } = require("dialogflow-fulfillment");
-const db = require("../database/database");
+const { db } = require("../database/database");
 const linepay = require("../linepay-api/reserve-payment");
 const { push } = require("../helper/push");
 const linePayload = require("../helper/payload");

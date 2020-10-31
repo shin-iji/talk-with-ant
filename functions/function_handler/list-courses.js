@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 const { Payload } = require("dialogflow-fulfillment");
 const linePayload = require("../helper/payload");
 const lineHelper = require("../helper/line-helper");
@@ -10,11 +10,9 @@ module.exports = async (agent) => {
     const courses = [];
     const contents = [];
     courseRef.forEach((doc) => {
-      let pictureUrl = doc.data().pictureUrl;
       let courseName = doc.data().courseName;
       let date = doc.data().date;
       courses.push({
-        pictureUrl,
         courseName,
         date,
       });
@@ -24,7 +22,7 @@ module.exports = async (agent) => {
       if (Date.parse(`${doc.date}`) < `${today}`) {
         continue;
       }
-      contents.push(linePayload.listCourses(doc.pictureUrl, doc.courseName, doc.date));
+      contents.push(linePayload.listCourses(doc.courseName, doc.date));
     }
     if (!Array.isArray(contents) || !contents.length) {
       agent.add("ไม่มีคอร์สจ้า");

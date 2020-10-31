@@ -1,4 +1,4 @@
-const db = require("../../database/database");
+const { db } = require("../../database/database");
 const { multicast } = require("../../helper/multicast");
 const linePayload = require("../../helper/payload");
 

@@ -1,5 +1,5 @@
 const { all } = require("../../api/api");
-const db = require("../../database/database");
+const { db } = require("../../database/database");
 
 exports.countAttend = async (courseId) => {
   let allAttend = [];

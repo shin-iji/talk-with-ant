@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 const { Payload } = require("dialogflow-fulfillment");
 const linePayload = require("../helper/payload");
 const lineHelper = require("../helper/line-helper");

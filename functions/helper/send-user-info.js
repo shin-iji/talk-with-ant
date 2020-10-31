@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 const linePayload = require("./payload");
 
 exports.sendUserInfo = async (courseName, orderId) => {

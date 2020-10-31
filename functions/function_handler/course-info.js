@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 const { Payload } = require("dialogflow-fulfillment");
 const linePayload = require("../helper/payload");
 
@@ -9,7 +9,6 @@ module.exports = async (agent) => {
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     let payloadJson;
     snapshot.forEach((doc) => {
-      let url = doc.data().pictureUrl;
       let desc = doc.data().description;
       let max = doc.data().maxPar;
       let available = doc.data().avaiPar;
@@ -21,7 +20,7 @@ module.exports = async (agent) => {
       if (amount === undefined) {
         amount = "Free";
       }
-      payloadJson = linePayload.courseInfo(courseName, url, desc, max, available, date, amount);
+      payloadJson = linePayload.courseInfo(courseName, desc, max, available, date, amount);
     });
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);

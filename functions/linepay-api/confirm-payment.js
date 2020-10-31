@@ -3,7 +3,7 @@ const lineSdk = require("@line/bot-sdk");
 
 const config = require("../config/config.json");
 const line = new lineSdk.Client(config.line);
-const db = require("../database/database");
+const { db } = require("../database/database");
 const lineHelper = require("../helper/line-helper");
 const linePayload = require("../helper/payload");
 const { push } = require("../helper/push");

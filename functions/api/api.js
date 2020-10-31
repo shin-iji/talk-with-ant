@@ -3,12 +3,14 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const fileMiddleware = require("express-multipart-file-parser");
 
 const courses = require("./routes/routes");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+app.use(fileMiddleware);
 
 //exports.twaApi = functions.region("asia-northeast1").https.onRequest(app);
 

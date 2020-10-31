@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 const { Payload } = require("dialogflow-fulfillment");
 const linePayload = require("../helper/payload");
 
@@ -12,8 +12,8 @@ module.exports = async (agent) => {
     const courseRef = db.collection("Training Courses");
     const snapshot = await courseRef.where("date", "==", date).get();
     snapshot.forEach((doc) => {
-      courseName=doc.data().courseName;
-      courseId=doc.id;
+      courseName = doc.data().courseName;
+      courseId = doc.id;
     });
     //console.log(courseName[0]);
     const payloadJson = linePayload.sendCheckAttend(courseId, courseName);

@@ -3,7 +3,7 @@ const channelAccessToken =
 
 const request = require("request-promise");
 const config = require("../config/config.json");
-const db = require("../database/database");
+const { db } = require("../database/database");
 
 const linePayload = require("../helper/payload");
 const { push } = require("../helper/push");

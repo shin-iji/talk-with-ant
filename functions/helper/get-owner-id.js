@@ -1,4 +1,4 @@
-const db = require("../database/database");
+const { db } = require("../database/database");
 
 exports.getOwnerId = async (courseName) => {
   let ownerId;

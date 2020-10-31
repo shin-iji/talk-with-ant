@@ -3,5 +3,6 @@ const admin = require("firebase-admin");
 
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
+const storage = admin.storage();
 
-module.exports = db;
+module.exports = { db, storage };
