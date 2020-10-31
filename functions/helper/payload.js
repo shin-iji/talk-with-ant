@@ -544,13 +544,15 @@ module.exports = {
       },
     };
   },
-  listCourses: (url, courseName, date) => {
+  listCourses: (courseName, date) => {
     return {
       type: "bubble",
       size: "kilo",
       hero: {
         type: "image",
-        url: `${url}`,
+        url: `https://storage.googleapis.com/antv2-xdbgna.appspot.com/${courseName
+          .split(" ")
+          .join("_")}`,
         size: "full",
         aspectMode: "fit",
       },
@@ -617,7 +619,7 @@ module.exports = {
       },
     };
   },
-  courseInfo: (courseName, url, desc, max, available, date, amount) => {
+  courseInfo: (courseName, desc, max, available, date, amount) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -644,7 +646,9 @@ module.exports = {
           contents: [
             {
               type: "image",
-              url: `${url}`,
+              url: `https://storage.googleapis.com/antv2-xdbgna.appspot.com/${courseName
+                .split(" ")
+                .join("_")}`,
               aspectMode: "fit",
               size: "full",
               aspectRatio: "20:13",
