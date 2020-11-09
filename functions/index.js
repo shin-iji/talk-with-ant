@@ -25,6 +25,8 @@ const listPayment = require("./function_handler/list-payment");
 const checkUserData = require("./function_handler/check-user-data");
 const register = require("./function_handler/register");
 const registerForm = require("./function_handler/register-form");
+const askMulticastCourse = require("./function_handler/ask-multicast-course");
+const createCourseForm = require("./function_handler/create-course");
 
 const test = require("./function_handler/test");
 
@@ -60,6 +62,8 @@ exports.antOwnerDialogflowFulfillment = functions.https.onRequest((request, resp
   let intentMap = new Map();
   intentMap.set("Check Attend", findCourseByDate);
   intentMap.set("Check Attend - Yes", sendCheckButton);
+  intentMap.set("Create course End", askMulticastCourse);
+  intentMap.set("Create course", createCourseForm);
   agent.handleRequest(intentMap);
 });
 

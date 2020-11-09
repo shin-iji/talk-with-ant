@@ -7,6 +7,7 @@ const lineHelper = require("../helper/line-helper");
 const linePayload = require("../helper/payload");
 const querystring = require("querystring");
 const { reply } = require("../helper/reply");
+const { broadcast } = require("../helper/broadcast");
 
 //Source Code
 const { convertStruct } = require("./src/convert-struct");
@@ -15,6 +16,7 @@ const { sendCheckAttend } = require("./src/send-check-attend");
 const { checkAttend } = require("./src/check-attend");
 const { countAttend } = require("./src/count-attend");
 const { getPaymentUrl } = require("./src/get-payment-url");
+const { getCourseById } = require("./src/get-course-by-id");
 
 //Line Pay
 const linepay = require("../linepay-api/reserve-payment");
@@ -102,6 +104,22 @@ exports.webhook = async (req, res) => {
       let result = await countAttend(courseId);
       await reply(channelAccessToken, events.replyToken, [
         lineHelper.createTextMessage(`มีผู้เข้าร่วมทั้งหมด ${result} คนจ้า`),
+      ]);
+    }
+
+    if (data.action === "MULTICAST_COURSE") {
+      const courseId = data.courseId;
+      const course = await getCourseById(courseId);
+      const msg = [
+        {
+          type: `text`,
+          text: "มีคอร์สมาใหม่จ้าา",
+        },
+        lineHelper.createFlexMessage("New Course!", course),
+      ];
+      await broadcast(msg);
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage("ทำการกระจายข้อมูลแล้วนะ"),
       ]);
     }
   }

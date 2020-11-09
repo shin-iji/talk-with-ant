@@ -4,6 +4,7 @@ const actionType = {
   SEND_CHECK_ATTEND: "SEND_CHECK_ATTEND",
   COUNT_ATTEND: "COUNT_ATTEND",
   CONFIRM_PAYMENT: "CONFIRM_PAYMENT",
+  MULTICAST_COURSE: "MULTICAST_COURSE",
 };
 
 module.exports = {
@@ -1174,7 +1175,7 @@ module.exports = {
       },
     };
   },
-  formButton: (courseName, courseId) => {
+  registerFormButton: (courseName, courseId) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -1221,6 +1222,135 @@ module.exports = {
                     type: "uri",
                     label: "สมัคร",
                     uri: `https://liff.line.me/1654378227-QwAzgAb0/enrollcourse?courseId=${courseId}`,
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                },
+              ],
+            },
+          ],
+        },
+        styles: {
+          footer: {
+            separator: true,
+          },
+        },
+      },
+    };
+  },
+  askMulticastCourse: (courseId) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "ต้องการประกาศให้ผู้ใช้ไหม",
+              align: "center",
+              weight: "bold",
+              size: "xl",
+              color: "#ffffff",
+            },
+          ],
+          backgroundColor: "#FF783E",
+        },
+        body: {
+          type: "box",
+          layout: "horizontal",
+          contents: [
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "message",
+                    label: "ไม่ต้องการ",
+                    text: "ไม่ต้องการ",
+                  },
+                  position: "relative",
+                  style: "secondary",
+                },
+              ],
+              position: "absolute",
+              width: "125px",
+              paddingTop: "19px",
+              offsetStart: "21px",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "postback",
+                    label: "ต้องการ",
+                    data: `action=${actionType.MULTICAST_COURSE}&courseId=${courseId}`,
+                  },
+                  position: "relative",
+                  height: "md",
+                  style: "primary",
+                  color: "#FF783E",
+                },
+              ],
+              width: "125px",
+              position: "absolute",
+              offsetStart: "155px",
+              paddingTop: "19px",
+            },
+          ],
+          height: "90px",
+        },
+      },
+    };
+  },
+  createCourseFormButton: () => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "CREATE COURSE",
+              weight: "bold",
+              color: "#FF783E",
+              size: "sm",
+            },
+            {
+              type: "text",
+              text: "Training with ant",
+              size: "xs",
+              color: "#aaaaaa",
+              wrap: true,
+            },
+            {
+              type: "separator",
+              margin: "xl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              margin: "lg",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "uri",
+                    label: "สร้าง",
+                    uri: `https://liff.line.me/1654378227-QwAzgAb0/`,
                   },
                   style: "primary",
                   color: "#FF783E",

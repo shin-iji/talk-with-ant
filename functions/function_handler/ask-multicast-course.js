@@ -1,6 +1,6 @@
-const { db } = require("../database/database");
 const { Payload } = require("dialogflow-fulfillment");
 const linePayload = require("../helper/payload");
+const { db } = require("../database/database");
 
 module.exports = async (agent) => {
   try {
@@ -8,13 +8,12 @@ module.exports = async (agent) => {
     let courseId;
 
     const courseRef = db.collection("Training Courses");
-
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
       courseId = doc.id;
     });
 
-    let payloadJson = linePayload.registerFormButton(courseName, courseId);
+    const payloadJson = linePayload.askMulticastCourse(courseId);
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);
   } catch (error) {
