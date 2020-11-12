@@ -149,6 +149,7 @@ module.exports = {
                     type: "postback",
                     label: "ต้องการ",
                     data: `action=${actionType.CONFIRM_PAYMENT}&courseName=${courseName}&orderId=${orderId}&amount=${amount}`,
+                    displayText: "ชำระเงิน",
                   },
                   position: "relative",
                   height: "md",
@@ -315,6 +316,7 @@ module.exports = {
             type: "postback",
             label: "action",
             data: `action=${actionType.CHECK_ATTEND}&courseId=${courseId}`,
+            displayText: "เช็คชื่อ",
           },
         },
         body: {
@@ -474,6 +476,7 @@ module.exports = {
                     type: "postback",
                     label: "เริ่มเช็คชื่อ",
                     data: `action=${actionType.SEND_CHECK_ATTEND}&courseId=${courseId}&courseName=${courseName}`,
+                    displayText: `เริ่มเช็คชื่อ ${courseName}`,
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -533,6 +536,7 @@ module.exports = {
                     type: "postback",
                     label: "นับยอดผู้เข้าร่วม",
                     data: `action=${actionType.COUNT_ATTEND}&courseId=${courseId}`,
+                    displayText: "นับยอดผู้เข้าร่วม",
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -1293,6 +1297,7 @@ module.exports = {
                     type: "postback",
                     label: "ต้องการ",
                     data: `action=${actionType.MULTICAST_COURSE}&courseId=${courseId}`,
+                    displayText: "กระจายข้อมูล",
                   },
                   position: "relative",
                   height: "md",
@@ -1330,6 +1335,13 @@ module.exports = {
             },
             {
               type: "text",
+              text: "สร้างงานอบรม",
+              weight: "bold",
+              size: "xxl",
+              margin: "md",
+            },
+            {
+              type: "text",
               text: "Training with ant",
               size: "xs",
               color: "#aaaaaa",
@@ -1337,20 +1349,73 @@ module.exports = {
             },
             {
               type: "separator",
-              margin: "xl",
+              margin: "xxl",
+            },
+            {
+              type: "text",
+              size: "md",
+              wrap: true,
+              margin: "md",
+              text: "การสร้าง งานอบรม จะใช้ข้อมูลดังนี้",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "sm",
+              text: "ชื่องานอบรม",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "none",
+              text: "วันที่จัด",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "none",
+              text: "จำนวนคนที่รับ",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "none",
+              text: "คำอธิบาย",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "none",
+              text: "สถานที",
+            },
+            {
+              type: "text",
+              size: "xs",
+              wrap: true,
+              margin: "none",
+              text: "ค่าสมัคร",
+            },
+            {
+              type: "separator",
+              margin: "md",
             },
             {
               type: "box",
               layout: "vertical",
-              margin: "lg",
+              margin: "xxl",
               spacing: "sm",
               contents: [
                 {
                   type: "button",
                   action: {
                     type: "uri",
-                    label: "สร้าง",
-                    uri: `https://liff.line.me/1654378227-QwAzgAb0/`,
+                    label: "เริ่มสร้าง",
+                    uri: "https://liff.line.me/1654987039-3lvl9O4p",
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -1363,6 +1428,149 @@ module.exports = {
           footer: {
             separator: true,
           },
+        },
+      },
+    };
+  },
+  feedbackFormButton: (courseName, url) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "FEEDBACK",
+              weight: "bold",
+              color: "#FF783E",
+              size: "sm",
+            },
+            {
+              type: "text",
+              text: `${courseName}`,
+              weight: "bold",
+              size: "xxl",
+              margin: "md",
+            },
+            {
+              type: "text",
+              text: "Training with ant",
+              size: "xs",
+              color: "#aaaaaa",
+              wrap: true,
+            },
+            {
+              type: "separator",
+              margin: "xxl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              margin: "xxl",
+              spacing: "sm",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "uri",
+                    label: "เริ่มทำเเบบสอบถาม",
+                    uri: `${url}`,
+                  },
+                  style: "primary",
+                  color: "#FF783E",
+                },
+              ],
+            },
+          ],
+        },
+        styles: {
+          footer: {
+            separator: true,
+          },
+        },
+      },
+    };
+  },
+  askedMulticastFeedback: (courseName) => {
+    return {
+      type: "flex",
+      altText: "Flex Message",
+      contents: {
+        type: "bubble",
+        header: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: "ต้องการส่งแบบสอบถามเลยมั้ย",
+              color: "#ffffff",
+              weight: "bold",
+              align: "center",
+            },
+          ],
+          backgroundColor: "#FF783E",
+        },
+        body: {
+          type: "box",
+          layout: "vertical",
+          contents: [
+            {
+              type: "text",
+              text: `${courseName}`,
+              color: "#aaaaaa",
+              align: "center",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "message",
+                    label: "ต้องการ",
+                    text: `ส่งแบบสอบถาม ${courseName}`,
+                  },
+                  position: "relative",
+                  height: "md",
+                  style: "primary",
+                  color: "#FF783E",
+                  offsetTop: "60px",
+                },
+              ],
+              width: "125px",
+              position: "absolute",
+              offsetStart: "155px",
+              height: "160px",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "message",
+                    label: "ไม่ต้องการ",
+                    text: "ไม่ต้องการ",
+                  },
+                  position: "relative",
+                  style: "secondary",
+                  offsetTop: "60px",
+                },
+              ],
+              position: "absolute",
+              width: "125px",
+              offsetStart: "21px",
+              height: "160px",
+            },
+          ],
+          height: "130px",
         },
       },
     };
