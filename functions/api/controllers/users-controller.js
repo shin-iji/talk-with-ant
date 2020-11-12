@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
       tel,
       email,
       timestamp: timestamp,
-      checkAttent: false,
+      checkAttend: false,
       paymentStatus: false,
     };
     const user = {
@@ -47,11 +47,6 @@ const createUserByCourse = async (req, res) => {
   try {
     const courseId = req.params.id;
     const { userId, name, tel, email } = req.body;
-    console.log(courseId);
-    console.log(userId);
-    console.log(name);
-    console.log(tel);
-    console.log(email);
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
@@ -62,7 +57,7 @@ const createUserByCourse = async (req, res) => {
       tel,
       email,
       timestamp: timestamp,
-      checkAttent: false,
+      checkAttend: false,
       paymentStatus: false,
     };
     const courseRef = await db
