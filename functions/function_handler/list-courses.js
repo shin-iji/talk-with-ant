@@ -25,9 +25,12 @@ module.exports = async (agent) => {
       contents.push(linePayload.listCourses(doc.courseName, doc.date));
     }
     if (!Array.isArray(contents) || !contents.length) {
+      const payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add("ไม่มีคอร์สจ้า");
+      agent.add(payload);
     } else {
-      const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents); //Change button to text
+      const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add(payload);
     }
