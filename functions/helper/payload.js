@@ -435,56 +435,57 @@ module.exports = {
       altText: "Flex Message",
       contents: {
         type: "bubble",
-        header: {
-          type: "box",
-          layout: "vertical",
-          contents: [
-            {
-              type: "text",
-              text: "Check Attendees",
-              color: "#ffffff",
-              weight: "bold",
-              align: "center",
-            },
-          ],
-          backgroundColor: "#FF783E",
-        },
         body: {
           type: "box",
           layout: "vertical",
           contents: [
             {
               type: "text",
+              text: "CHECK ATTENDED",
+              weight: "bold",
+              color: "#FF783E",
+              size: "sm",
+            },
+            {
+              type: "text",
               text: `${courseName}`,
-              maxLines: 2,
-              wrap: true,
-              color: "#aaaaaa",
-              align: "center",
+              weight: "bold",
+              size: "xxl",
+              margin: "md",
             },
             {
               type: "separator",
-              margin: "md",
-              color: "#ffffff",
+              margin: "xxl",
+            },
+            {
+              type: "box",
+              layout: "vertical",
+              contents: [],
             },
             {
               type: "box",
               layout: "horizontal",
+              margin: "md",
               contents: [
                 {
                   type: "button",
                   action: {
                     type: "postback",
-                    label: "เริ่มเช็คชื่อ",
+                    label: `เริ่มเช็คผู้เข้าร่วม`,
+                    displayText: `เช็คชื่อ ${courseName}`,
                     data: `action=${actionType.SEND_CHECK_ATTEND}&courseId=${courseId}&courseName=${courseName}`,
-                    displayText: `เริ่มเช็คชื่อ ${courseName}`,
                   },
                   style: "primary",
                   color: "#FF783E",
-                  margin: "none",
                 },
               ],
             },
           ],
+        },
+        styles: {
+          footer: {
+            separator: true,
+          },
         },
       },
     };
@@ -1572,6 +1573,97 @@ module.exports = {
           ],
           height: "130px",
         },
+      },
+    };
+  },
+  listCheckAttend: (courseId, courseName) => {
+    return {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "CHECK ATTENDED",
+            weight: "bold",
+            color: "#FF783E",
+            size: "sm",
+          },
+          {
+            type: "text",
+            text: `${courseName}`,
+            weight: "bold",
+            size: "xxl",
+            margin: "md",
+          },
+          {
+            type: "separator",
+            margin: "xxl",
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            contents: [],
+          },
+          {
+            type: "box",
+            layout: "horizontal",
+            margin: "md",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "postback",
+                  label: `เริ่มเช็คผู้เข้าร่วม`,
+                  displayText: `เช็คชื่อ ${courseName}`,
+                  data: `action=${actionType.SEND_CHECK_ATTEND}&courseId=${courseId}&courseName=${courseName}`,
+                },
+                style: "primary",
+                color: "#FF783E",
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        footer: {
+          separator: true,
+        },
+      },
+    };
+  },
+  askTodoAnythingOwner: () => {
+    return {
+      text: "ต้องการทำอะไรต่อบอกได้นะ",
+      type: "text",
+      quickReply: {
+        items: [
+          {
+            type: "action",
+            action: {
+              text: "สร้างคอร์ส",
+              type: "message",
+              label: "สร้างคอร์ส",
+            },
+          },
+          {
+            action: {
+              label: "เช็คชื่อ",
+              type: "message",
+              text: "เช็คชื่อ",
+            },
+            type: "action",
+          },
+          {
+            type: "action",
+            action: {
+              label: "ส่งแบบสอบถาม",
+              text: "ส่งแบบสอบถาม",
+              type: "message",
+            },
+          },
+        ],
       },
     };
   },

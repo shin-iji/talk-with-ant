@@ -18,7 +18,7 @@ const welcome = require("./function_handler/welcome");
 const fallback = require("./function_handler/fallback");
 const listCourses = require("./function_handler/list-courses");
 const payment = require("./function_handler/check-ready-payment");
-const findCourseByDate = require("./function_handler/find-course-by-date");
+const findCourseForCheckAttend = require("./function_handler/find-course-for-check-attend");
 const sendCheckButton = require("./function_handler/send-check-payload");
 const courseInfo = require("./function_handler/course-info");
 const listPayment = require("./function_handler/list-payment");
@@ -27,6 +27,8 @@ const register = require("./function_handler/register");
 const registerForm = require("./function_handler/register-form");
 const askMulticastCourse = require("./function_handler/ask-multicast-course");
 const createCourseForm = require("./function_handler/create-course");
+const sendFeedback = require("./function_handler/send-feedback");
+const askMulticastFeedback = require("./function_handler/ask-multicast-feedback");
 
 const test = require("./function_handler/test");
 
@@ -60,10 +62,12 @@ exports.antOwnerDialogflowFulfillment = functions.https.onRequest((request, resp
 
   // Run the proper function handler based on the matched Dialogflow intent name
   let intentMap = new Map();
-  intentMap.set("Check Attend", findCourseByDate);
+  intentMap.set("Check Attend", findCourseForCheckAttend);
   intentMap.set("Check Attend - Yes", sendCheckButton);
   intentMap.set("Create course End", askMulticastCourse);
   intentMap.set("Create course", createCourseForm);
+  intentMap.set("Feedback", askMulticastFeedback);
+  intentMap.set("Send Feedback", sendFeedback);
   agent.handleRequest(intentMap);
 });
 
