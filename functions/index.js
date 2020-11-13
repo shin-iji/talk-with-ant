@@ -18,17 +18,17 @@ const welcome = require("./function_handler/welcome");
 const fallback = require("./function_handler/fallback");
 const listCourses = require("./function_handler/list-courses");
 const payment = require("./function_handler/check-ready-payment");
-const findCourseForCheckAttend = require("./function_handler/find-course-for-check-attend");
-const sendCheckButton = require("./function_handler/send-check-payload");
+const findCourseForCheckAttend = require("./function_handler_owner/find-course-for-check-attend");
+const sendCheckButton = require("./function_handler_owner/send-check-payload");
 const courseInfo = require("./function_handler/course-info");
 const listPayment = require("./function_handler/list-payment");
 const checkUserData = require("./function_handler/check-user-data");
 const register = require("./function_handler/register");
 const registerForm = require("./function_handler/register-form");
-const askMulticastCourse = require("./function_handler/ask-multicast-course");
-const createCourseForm = require("./function_handler/create-course");
-const sendFeedback = require("./function_handler/send-feedback");
-const askMulticastFeedback = require("./function_handler/ask-multicast-feedback");
+const askMulticastCourse = require("./function_handler_owner/ask-multicast-course");
+const createCourseForm = require("./function_handler_owner/create-course");
+const sendFeedback = require("./function_handler_owner/send-feedback");
+const askMulticastFeedback = require("./function_handler_owner/ask-multicast-feedback");
 
 const test = require("./function_handler/test");
 
