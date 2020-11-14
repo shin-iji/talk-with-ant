@@ -5,13 +5,15 @@ const lineHelper = require("../helper/line-helper");
 
 module.exports = async (agent) => {
   try {
+    const session = agent.session;
+    const userId = session.split("/")[4];
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const date = today.toLocaleDateString(); // "6/14/2020"
     let listCourses = [];
 
     const courseRef = db.collection("Training Courses");
-    const snapshot = await courseRef.where("date", "==", date).get();
+    const snapshot = await courseRef.where("date", "==", date).where("ownerId", "==", userId).get();
     snapshot.forEach((doc) => {
       let courseName = doc.data().courseName;
       let courseId = doc.id;
@@ -37,7 +39,7 @@ module.exports = async (agent) => {
       if (!Array.isArray(contents) || !contents.length) {
         const payloadJson = linePayload.askTodoAnythingOwner();
         let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        agent.add("ดูเหมือนจะไม่มีคอร์สในช่วงนี้เลยนะ");
+        agent.add("ดูเหมือนคุณจะไม่มีคอร์สในช่วงนี้เลยนะ");
         agent.add(payload);
       } else {
         const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
@@ -46,18 +48,6 @@ module.exports = async (agent) => {
         agent.add(payload);
       }
     } else {
-      if (listCourses.length != 1) {
-        console.log(listCourses);
-        let contents = [];
-        listCourses.map((course) => {
-          contents.push(linePayload.listCheckAttend(course.courseId, course.courseName));
-        });
-        const payloadJson = lineHelper.createFlexCarouselMessage("Check Attend", contents);
-        let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        agent.add("ดูเหมือนวันนี้จะมีตรงกันหลายคอร์สนะ แต่สามารถเลือกได้จากรายการนี้เลย");
-        agent.add(payload);
-        return;
-      }
       agent.add("พบคอร์สที่ตรงกับวันนี้นะ");
       const payloadJson = linePayload.askedSendCheckAttend(listCourses[0].courseName, date);
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
