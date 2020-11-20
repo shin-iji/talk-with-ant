@@ -47,6 +47,16 @@ ngrok http 5001
 https://xxxxxx.ngrok.io/{project Id}/{region}/{function name}
 ```
 
+## RESTful API
+##### Owner
+- `GET /courses` get all courses
+- `GET /courses/:id` get course by id
+- `POST /courses` create course
+- `DELETE /courses/:id` delete courses by id
+##### User
+- `POST /courses/:id/users` create user by course id
+
+
 ## Deployment
 
 ```
