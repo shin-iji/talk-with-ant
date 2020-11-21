@@ -18,9 +18,6 @@ const { countAttend } = require("./src/count-attend");
 const { getPaymentUrl } = require("./src/get-payment-url");
 const { getCourseById } = require("./src/get-course-by-id");
 
-//Line Pay
-const linepay = require("../linepay-api/reserve-payment");
-
 exports.webhook = async (req, res) => {
   console.log("Start Webhook", JSON.stringify(req.body));
   let destination = req.body.destination;
@@ -93,10 +90,7 @@ exports.webhook = async (req, res) => {
     if (data.action === "CHECK_ATTEND") {
       const userId = events.source.userId;
       const courseId = data.courseId;
-      checkAttend(userId, courseId);
-      await reply(channelAccessToken, events.replyToken, [
-        lineHelper.createTextMessage("เช็คชื่อเรียบร้อย"),
-      ]);
+      checkAttend(channelAccessToken, userId, courseId);
     }
 
     if (data.action === "COUNT_ATTEND") {
