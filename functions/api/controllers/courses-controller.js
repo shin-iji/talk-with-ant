@@ -72,8 +72,8 @@ const createCourse = async (req, res, next) => {
       description,
       location,
       trainerName,
-      maxPar,
-      avaiPar: maxPar,
+      maxPar: Number(maxPar),
+      avaiPar: Number(maxPar),
     };
 
     const courseRef = await db.collection("Training Courses").doc().set(data);
