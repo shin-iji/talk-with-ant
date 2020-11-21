@@ -9,12 +9,14 @@ module.exports = async (agent) => {
     const courseName = agent.parameters.courseName;
     let courseId;
     let orderId;
+    let avaiPar;
 
     const courseRef = db.collection("Training Courses");
 
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
       courseId = doc.id;
+      avaiPar = doc.data().avaiPar;
     });
 
     const userRef = await courseRef
@@ -26,22 +28,29 @@ module.exports = async (agent) => {
       orderId = doc.id;
     });
 
-    if (orderId) {
-      agent.add("คุณสมัครคอร์สนี้ไปแล้วน้า ลองดูคอร์สอื่นนะ");
+    if (avaiPar === 0) {
+      agent.add("ขอโทษด้วยนะ คอร์สนี้เต็มแล้ว");
+      let payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add(payload);
     } else {
-      const userColleRef = await db.collection("Users").doc(`${userId}`).get();
-      let payloadJson;
-      if (userColleRef.data() === undefined) {
-        payloadJson = linePayload.formButton(courseName, courseId);
-        let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        agent.add(payload);
+      if (orderId) {
+        agent.add("คุณสมัครคอร์สนี้ไปแล้วน้า ลองดูคอร์สอื่นนะ");
       } else {
-        const name = userColleRef.data().name;
-        const tel = userColleRef.data().tel;
-        const email = userColleRef.data().email;
-        payloadJson = linePayload.userInfo(name, tel, email);
-        let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        agent.add(payload);
+        const userColleRef = await db.collection("Users").doc(`${userId}`).get();
+        let payloadJson;
+        if (userColleRef.data() === undefined) {
+          payloadJson = linePayload.formButton(courseName, courseId);
+          let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+          agent.add(payload);
+        } else {
+          const name = userColleRef.data().name;
+          const tel = userColleRef.data().tel;
+          const email = userColleRef.data().email;
+          payloadJson = linePayload.userInfo(name, tel, email);
+          let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+          agent.add(payload);
+        }
       }
     }
   } catch (error) {

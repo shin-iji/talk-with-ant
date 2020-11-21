@@ -550,7 +550,7 @@ module.exports = {
       },
     };
   },
-  listCourses: (courseName, date) => {
+  listCourses: (courseName, date, button) => {
     return {
       type: "bubble",
       size: "kilo",
@@ -592,16 +592,7 @@ module.exports = {
             type: "box",
             layout: "horizontal",
             contents: [
-              {
-                type: "button",
-                action: {
-                  type: "message",
-                  label: "สมัคร",
-                  text: `สมัคร ${courseName}`,
-                },
-                style: "primary",
-                color: "#FF783E",
-              },
+              button,
               {
                 type: "button",
                 action: {
@@ -625,7 +616,7 @@ module.exports = {
       },
     };
   },
-  courseInfo: (courseName, desc, max, available, date, amount) => {
+  courseInfo: (courseName, desc, max, available, date, amount, button) => {
     return {
       type: "flex",
       altText: "Flex Message",
@@ -805,16 +796,7 @@ module.exports = {
               margin: "xl",
               color: "#ffffff",
             },
-            {
-              type: "button",
-              action: {
-                type: "message",
-                label: "Register",
-                text: `สมัคร ${courseName}`,
-              },
-              style: "primary",
-              color: "#FF783E",
-            },
+            button,
           ],
         },
       },
