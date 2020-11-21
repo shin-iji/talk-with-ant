@@ -1667,4 +1667,60 @@ module.exports = {
       },
     };
   },
+  listFeedback: (courseName) => {
+    return {
+      type: "bubble",
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "SEND FEEDBACK",
+            weight: "bold",
+            color: "#FF783E",
+            size: "sm",
+          },
+          {
+            type: "text",
+            text: `${courseName}`,
+            weight: "bold",
+            size: "xxl",
+            margin: "md",
+          },
+          {
+            type: "separator",
+            margin: "xxl",
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            contents: [],
+          },
+          {
+            type: "box",
+            layout: "horizontal",
+            margin: "md",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "text",
+                  label: `ส่งแบบสอบถาม`,
+                  text: `ส่งแบบสอบถาม ${courseName}`,
+                },
+                style: "primary",
+                color: "#FF783E",
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        footer: {
+          separator: true,
+        },
+      },
+    };
+  },
 };
