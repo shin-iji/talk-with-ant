@@ -23,9 +23,13 @@ module.exports = async (agent) => {
     if (!Array.isArray(listCourses) || !listCourses.length) {
       let courses = [];
       let contents = [];
-      const course = await courseRef.get();
+      const course = await courseRef.where("ownerId", "==", userId).get();
       course.forEach((doc) => {
-        courses.push({ courseId: doc.id, courseName: doc.data().courseName });
+        courses.push({
+          courseId: doc.id,
+          courseName: doc.data().courseName,
+          date: doc.data().date,
+        });
       });
 
       for (let i = 0; i < courses.length; i++) {
