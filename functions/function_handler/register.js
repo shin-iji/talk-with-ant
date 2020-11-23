@@ -27,8 +27,7 @@ module.exports = async (agent) => {
       tel: userColleRef.data().tel,
       email: userColleRef.data().email,
       timestamp: timestamp,
-      checkAttent: false,
-      paymentStatus: false,
+      checkAttend: false,
     };
 
     let courseId;
@@ -63,7 +62,7 @@ module.exports = async (agent) => {
     const ownerId = await getOwnerId(courseName);
     const userInfo = await sendUserInfo(courseName, orderId);
     const userRef = courseRef.doc(`${courseId}`).collection("users");
-
+    console.log(amount);
     if (amount === undefined) {
       await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
@@ -72,6 +71,7 @@ module.exports = async (agent) => {
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add(payload);
     } else {
+      await userRef.doc(`${orderId}`).update({ paymentStatus: false });
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("รอสักครู่..");
       await linepay.reservePayment(courseName, amount, orderId, userId);
