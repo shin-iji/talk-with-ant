@@ -43,7 +43,7 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
           productName: courseName,
           amount: amount,
           currency: "THB",
-          status: "not paid",
+          status: "pending",
           paymentUrl: paymentUrl,
         };
         const transactionId = response.info.transactionId;
