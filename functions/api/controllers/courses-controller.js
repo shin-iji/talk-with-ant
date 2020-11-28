@@ -43,10 +43,10 @@ const createCourse = async (req, res, next) => {
       maxPar,
     } = req.body;
 
-    const dateMiniSec = Date.parse(date);
-    const dateFormat = dateMiniSec.toLocaleDateString();
+    const newDate = new Date(date);
 
     const file = req.files[0];
+
     const fileName = `${courseName.split(" ").join("_")}`;
     const fileUpload = bucket.file(fileName);
     const blobStream = fileUpload.createWriteStream({
@@ -69,7 +69,7 @@ const createCourse = async (req, res, next) => {
     const data = {
       ownerId,
       courseName,
-      date: dateFormat,
+      date: newDate.toLocaleDateString(),
       amount,
       currency: "THB",
       description,
