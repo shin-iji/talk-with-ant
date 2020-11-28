@@ -16,7 +16,7 @@ module.exports = async (agent) => {
       let date = doc.data().date;
       let amount = doc.data().amount;
 
-      if (amount === undefined) {
+      if (amount === undefined || amount === "0" || amount === 0) {
         amount = "Free";
       }
 
