@@ -22,7 +22,7 @@ module.exports = async (agent) => {
     });
     for (let i = 0; i < courses.length; i++) {
       const doc = courses[i];
-      if (Date.parse(`${doc.date}`) < `${today}`) {
+      if (Date.parse(`${doc.date}`) < Number(today)) {
         continue;
       }
       if (doc.avaiPar === 0) {

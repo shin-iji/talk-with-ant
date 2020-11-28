@@ -4,13 +4,15 @@ const linePayload = require("../helper/payload");
 
 module.exports = async (agent) => {
   try {
+    const session = agent.session;
+    const userId = session.split("/")[4];
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const date = today.toLocaleDateString(); // "6/14/2020"
     let courseName;
     let courseId;
     const courseRef = db.collection("Training Courses");
-    const snapshot = await courseRef.where("date", "==", date).get();
+    const snapshot = await courseRef.where("date", "==", date).where("ownerId", "==", userId).get();
     snapshot.forEach((doc) => {
       courseName = doc.data().courseName;
       courseId = doc.id;
