@@ -1665,17 +1665,28 @@ module.exports = {
   listFeedback: (courseName) => {
     return {
       type: "bubble",
-      body: {
+      header: {
         type: "box",
         layout: "vertical",
         contents: [
           {
             type: "text",
-            text: "SEND FEEDBACK",
-            weight: "bold",
-            color: "#FF783E",
+            text: "FEEDBACK",
             size: "sm",
+            color: "#FF783E",
+            weight: "bold",
           },
+        ],
+        offsetTop: "none",
+        offsetBottom: "none",
+        offsetStart: "none",
+        offsetEnd: "none",
+        paddingBottom: "none",
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
           {
             type: "text",
             text: `${courseName}`,
@@ -1684,24 +1695,27 @@ module.exports = {
             margin: "md",
           },
           {
+            type: "text",
+            text: "Training with ant",
+            size: "xs",
+            color: "#aaaaaa",
+            wrap: true,
+          },
+          {
             type: "separator",
             margin: "xxl",
           },
           {
             type: "box",
             layout: "vertical",
-            contents: [],
-          },
-          {
-            type: "box",
-            layout: "horizontal",
-            margin: "md",
+            margin: "xxl",
+            spacing: "sm",
             contents: [
               {
                 type: "button",
                 action: {
-                  type: "text",
-                  label: `ส่งแบบสอบถาม`,
+                  type: "message",
+                  label: "เริ่มส่งเเบบสอบถาม",
                   text: `ส่งแบบสอบถาม ${courseName}`,
                 },
                 style: "primary",
@@ -1710,6 +1724,8 @@ module.exports = {
             ],
           },
         ],
+        offsetTop: "none",
+        paddingTop: "none",
       },
       styles: {
         footer: {

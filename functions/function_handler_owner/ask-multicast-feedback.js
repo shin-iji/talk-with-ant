@@ -18,6 +18,7 @@ module.exports = async (agent) => {
       let courseId = doc.id;
       listCourses.push({ courseId, courseName });
     });
+
     if (!Array.isArray(listCourses) || !listCourses.length) {
       let courses = [];
       let contents = [];
@@ -29,14 +30,15 @@ module.exports = async (agent) => {
           date: doc.data().date,
         });
       });
-
+      //console.log(courses);
       for (let i = 0; i < courses.length; i++) {
-        const doc = courses[i];
-        if (Date.parse(`${doc.date}`) < `${today}`) {
+        const course = courses[i];
+        if (Date.parse(`${course.date}`) < Number(today)) {
           continue;
         }
-        contents.push(linePayload.listFeedback(doc.courseName));
+        contents.push(linePayload.listFeedback(course.courseName));
       }
+      console.log(contents);
 
       if (!Array.isArray(contents) || !contents.length) {
         const payloadJson = linePayload.askTodoAnythingOwner();
@@ -46,6 +48,7 @@ module.exports = async (agent) => {
       } else {
         const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
         let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+        //console.log(payloadJson);
         agent.add("ไม่พบคอร์สที่ตรงกับวันนี้นะ แต่สามารถเลือกได้จากรายการนี้เลยนะ");
         agent.add(payload);
       }
