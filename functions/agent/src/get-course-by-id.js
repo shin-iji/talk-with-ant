@@ -7,7 +7,19 @@ exports.getCourseById = async (courseId) => {
     const courseRef = await db.collection("Training Courses").doc(`${courseId}`).get();
     const courseName = courseRef.data().courseName;
     const date = courseRef.data().date;
-    return linePayload.listCourses(courseName, date);
+
+    const button = {
+      type: "button",
+      action: {
+        type: "message",
+        label: "สมัคร",
+        text: `สมัคร ${courseName}`,
+      },
+      style: "primary",
+      color: "#FF783E",
+    };
+
+    return linePayload.listCourses(courseName, date, button);
   } catch (error) {
     console.log(error);
   }

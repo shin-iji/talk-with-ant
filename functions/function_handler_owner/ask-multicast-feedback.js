@@ -38,7 +38,7 @@ module.exports = async (agent) => {
         }
         contents.push(linePayload.listFeedback(course.courseName));
       }
-      console.log(contents);
+      //console.log(contents);
 
       if (!Array.isArray(contents) || !contents.length) {
         const payloadJson = linePayload.askTodoAnythingOwner();
