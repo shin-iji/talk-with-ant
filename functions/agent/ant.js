@@ -17,6 +17,8 @@ const { checkAttend } = require("./src/check-attend");
 const { countAttend } = require("./src/count-attend");
 const { getPaymentUrl } = require("./src/get-payment-url");
 const { getCourseById } = require("./src/get-course-by-id");
+const { checkOwnerVerify } = require("./src/check-owner-verify");
+const { addOwner } = require("./src/add-owner");
 
 exports.webhook = async (req, res) => {
   console.log("Start Webhook", JSON.stringify(req.body));
@@ -37,6 +39,16 @@ exports.webhook = async (req, res) => {
       DIALOGFLOW_PROJECTID = "antowner-tovppp";
       DIALOGFLOW_SERVICE_ACCOUNT = "ant-owner-dialogflow-service-account.json";
       break;
+  }
+
+  const verify = await checkOwnerVerify(events.source.userId);
+  console.log(verify);
+
+  if (destination == "U4c942e6e783ace694220c4058f5894bd" && verify == false) {
+    await reply(channelAccessToken, events.replyToken, [
+      lineHelper.createTextMessage("รบกวนยืนยันตัวตนก่อนใช้งานด้วยนะ"),
+    ]);
+    //return;
   }
 
   if (events.type === "message") {
@@ -60,7 +72,15 @@ exports.webhook = async (req, res) => {
   }
 
   if (events.type === "follow") {
-    await reply(channelAccessToken, events.replyToken, [lineHelper.createTextMessage("สวัสดีจ้า")]);
+    if (destination == "U4c942e6e783ace694220c4058f5894bd") {
+      await addOwner(events.source.userId);
+      return;
+    } else {
+      await reply(channelAccessToken, events.replyToken, [
+        lineHelper.createTextMessage("สวัสดีจ้า"),
+      ]);
+    }
+    return;
   }
 
   if (events.type === "postback") {
@@ -111,6 +131,7 @@ exports.webhook = async (req, res) => {
         },
         lineHelper.createFlexMessage("New Course!", course),
       ];
+      //console.log(course);
       await broadcast(msg);
       await reply(channelAccessToken, events.replyToken, [
         lineHelper.createTextMessage("ทำการกระจายข้อมูลแล้วนะ"),
