@@ -14,13 +14,4 @@ router
 router.route("/users").post(usersController.createUser);
 router.route("/:id/users").post(usersController.createUserByCourse);
 
-// router.get("/", coursesController.getAllCourses);
-// router.get("/:id", coursesController.getCourse);
-// router.post("/", coursesController.createCourse);
-// router.put("/:id", coursesController.updateCourse);
-// router.delete("/:id", coursesController.deleteCourse);
-
-// router.post("/users", usersController.createUser);
-// router.post("/:id/users");
-
 module.exports = router;
