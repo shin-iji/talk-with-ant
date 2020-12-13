@@ -1,5 +1,5 @@
-const DIALOGFLOW_PROJECTID = "antv2-xdbgna";
-const DIALOGFLOW_SERVICE_ACCOUNT = "ant-dialogflow-service-account.json";
+const DIALOGFLOW_PROJECTID = "antowner-tovppp";
+const DIALOGFLOW_SERVICE_ACCOUNT = "ant-owner-dialogflow-service-account.json";
 
 const dialogflow = require("dialogflow");
 
@@ -64,12 +64,12 @@ function insertIfNewProgramAdded(entityList, updatedCourseName) {
   });
 }
 
-exports.updateEntity = async (courseName) => {
+exports.updateEntityOwner = async (courseName) => {
   try {
     if (courseName) {
       return await getEntitiesList()
         .then(async (entityList) => {
-          let courses = entityList[0][1];
+          let courses = entityList[0][0];
           await insertIfNewProgramAdded(courses, courseName);
         })
         .catch((err) => console.log(err));

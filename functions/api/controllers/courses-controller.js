@@ -1,5 +1,6 @@
 const { db, storage } = require("../../database/database");
 const { updateEntity } = require("../../helper/update-entity");
+const { updateEntityOwner } = require("../../helper/update-entity-owner");
 const bucket = storage.bucket();
 
 const getAllCourses = async (req, res) => {
@@ -47,6 +48,7 @@ const createCourse = async (req, res, next) => {
     const newDate = new Date(date);
 
     await updateEntity(courseName);
+    await updateEntityOwner(courseName);
 
     const file = req.files[0];
 
