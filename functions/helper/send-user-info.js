@@ -9,7 +9,7 @@ exports.sendUserInfo = async (courseName, orderId) => {
     courseId = doc.id;
   });
   const userRef = db.collection(`Training Courses/${courseId}/users`).doc(`${orderId}`);
-  await userRef.update({ paymentStatus: true });
+  await userRef.update({ paymentStatus: "paid" });
   const doc = await userRef.get();
   let name = doc.data().name;
   let email = doc.data().email;

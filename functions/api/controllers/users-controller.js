@@ -58,7 +58,7 @@ const createUserByCourse = async (req, res) => {
       email,
       timestamp: timestamp,
       checkAttend: false,
-      paymentStatus: false,
+      paymentStatus: "pending",
     };
     const courseRef = db.collection(`Training Courses`);
     await courseRef.doc(`${courseId}`).collection("users").doc().set(data);

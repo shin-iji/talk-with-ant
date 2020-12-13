@@ -21,7 +21,7 @@ module.exports = async (agent) => {
     const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
     const courseRef = db.collection("Training Courses");
 
-    console.log(courseName);
+    //console.log(courseName);
 
     const userColleRef = await db.collection("Users").doc(`${userId}`).get();
     const data = {
@@ -65,16 +65,16 @@ module.exports = async (agent) => {
     const ownerId = await getOwnerId(courseName);
     const userInfo = await sendUserInfo(courseName, orderId);
     const userRef = courseRef.doc(`${courseId}`).collection("users");
-    console.log(amount);
+    //console.log(amount);
     if (amount === undefined || amount === "0" || amount === 0) {
-      await userRef.doc(`${orderId}`).update({ paymentStatus: true });
+      await userRef.doc(`${orderId}`).update({ paymentStatus: "paid" });
       push(channelAccessToken, ownerId, userInfo);
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       let payloadJson = linePayload.askTodoAnything();
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add(payload);
     } else {
-      await userRef.doc(`${orderId}`).update({ paymentStatus: false });
+      await userRef.doc(`${orderId}`).update({ paymentStatus: "pending" });
       agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("รอสักครู่..");
       await linepay.reservePayment(courseName, amount, orderId, userId);
