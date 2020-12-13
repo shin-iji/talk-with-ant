@@ -5,19 +5,11 @@ const linePayload = require("../helper/payload");
 module.exports = async (agent) => {
   try {
     const courseName = agent.parameters.courseName;
-    const any = agent.parameters.any;
-    let name;
-    let snapshot;
     const courseRef = db.collection("Training Courses");
-    console.log(any);
+
     console.log(courseName);
-    if (courseName) {
-      snapshot = await courseRef.where("courseName", "==", courseName).get();
-      name = courseName;
-    } else {
-      snapshot = await courseRef.where("courseName", "==", any).get();
-      name = any;
-    }
+
+    const snapshot = await courseRef.where("courseName", "==", courseName).get();
 
     let payloadJson;
     let button;
@@ -57,13 +49,13 @@ module.exports = async (agent) => {
           action: {
             type: "message",
             label: "สมัคร",
-            text: `สมัคร ${name}`,
+            text: `สมัคร ${courseName}`,
           },
           style: "primary",
           color: "#FF783E",
         };
       }
-      payloadJson = linePayload.courseInfo(name, desc, max, available, date, amount, button);
+      payloadJson = linePayload.courseInfo(courseName, desc, max, available, date, amount, button);
     });
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add(payload);

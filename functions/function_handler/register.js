@@ -15,24 +15,17 @@ module.exports = async (agent) => {
     const session = agent.session;
     const userId = session.split("/")[4];
     const courseName = agent.parameters.courseName;
-    const any = agent.parameters.any;
-    let name;
 
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
     const courseRef = db.collection("Training Courses");
 
-    if (courseName) {
-      name = courseName;
-    } else {
-      name = any;
-    }
-    console.log(name);
+    console.log(courseName);
 
     const userColleRef = await db.collection("Users").doc(`${userId}`).get();
     const data = {
-      name,
+      courseName,
       userId,
       name: userColleRef.data().name,
       tel: userColleRef.data().tel,
@@ -45,7 +38,7 @@ module.exports = async (agent) => {
     let amount;
     let avaiPar;
 
-    const snapshot = await courseRef.where("courseName", "==", name).get();
+    const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
       courseId = doc.id;
       amount = doc.data().amount;
@@ -69,22 +62,22 @@ module.exports = async (agent) => {
         });
       });
 
-    const ownerId = await getOwnerId(name);
-    const userInfo = await sendUserInfo(name, orderId);
+    const ownerId = await getOwnerId(courseName);
+    const userInfo = await sendUserInfo(courseName, orderId);
     const userRef = courseRef.doc(`${courseId}`).collection("users");
     console.log(amount);
     if (amount === undefined || amount === "0" || amount === 0) {
       await userRef.doc(`${orderId}`).update({ paymentStatus: true });
       push(channelAccessToken, ownerId, userInfo);
-      agent.add(`ลงทะเบียน ${name} สำเร็จ`);
+      agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       let payloadJson = linePayload.askTodoAnything();
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add(payload);
     } else {
       await userRef.doc(`${orderId}`).update({ paymentStatus: false });
-      agent.add(`ลงทะเบียน ${name} สำเร็จ`);
+      agent.add(`ลงทะเบียน ${courseName} สำเร็จ`);
       agent.add("รอสักครู่..");
-      await linepay.reservePayment(name, amount, orderId, userId);
+      await linepay.reservePayment(courseName, amount, orderId, userId);
     }
   } catch (error) {
     console.log(error);

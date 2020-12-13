@@ -38,16 +38,16 @@ module.exports = async (agent) => {
         agent.add("คุณสมัครคอร์สนี้ไปแล้วน้า ลองดูคอร์สอื่นนะ");
       } else {
         const userColleRef = await db.collection("Users").doc(`${userId}`).get();
-        let payloadJson;
+
         if (userColleRef.data() === undefined) {
-          payloadJson = linePayload.formButton(courseName, courseId);
+          let payloadJson = linePayload.formButton(courseName, courseId);
           let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
           agent.add(payload);
         } else {
           const name = userColleRef.data().name;
           const tel = userColleRef.data().tel;
           const email = userColleRef.data().email;
-          payloadJson = linePayload.userInfo(name, tel, email);
+          let payloadJson = linePayload.userInfo(name, tel, email);
           let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
           agent.add(payload);
         }
