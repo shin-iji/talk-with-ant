@@ -50,7 +50,7 @@ const createUserByCourse = async (req, res) => {
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const timestamp = today.toLocaleString("th-TH", { timeZone: "Asia/Bangkok" });
-    console.log(timestamp);
+
     const data = {
       userId,
       name,
@@ -60,12 +60,19 @@ const createUserByCourse = async (req, res) => {
       checkAttend: false,
       paymentStatus: false,
     };
-    const courseRef = await db
-      .collection(`Training Courses`)
+    const courseRef = db.collection(`Training Courses`);
+    await courseRef.doc(`${courseId}`).collection("users").doc().set(data);
+
+    let history;
+    await courseRef
       .doc(`${courseId}`)
-      .collection("users")
-      .doc()
-      .set(data);
+      .get()
+      .then((doc) => {
+        history = {
+          courseName: doc.data().courseName,
+          date: doc.data().date,
+        };
+      });
 
     const user = {
       userId,
@@ -74,6 +81,13 @@ const createUserByCourse = async (req, res) => {
       email,
     };
     const userRef = await db.collection("Users").doc(`${userId}`).set(user);
+
+    const historyRef = await db
+      .collection("Users")
+      .doc(`${userId}`)
+      .collection("history")
+      .doc()
+      .set(history);
 
     res.status(200).json({
       courseId: courseId,
