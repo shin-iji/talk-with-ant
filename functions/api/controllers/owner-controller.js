@@ -66,6 +66,37 @@ const getVerifyId = async (req, res) => {
   }
 };
 
+const getAllAttend = async (req, res) => {
+  try {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    const courseId = req.params.id;
+    const courseRef = db.collection("Training Courses");
+    const users = [];
+    let courseName;
+
+    await courseRef
+      .doc(`${courseId}`)
+      .get()
+      .then((doc) => {
+        courseName = doc.data().courseName;
+      });
+
+    await courseRef
+      .doc(`${courseId}`)
+      .collection("users")
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          users.push({ name: doc.data().name, status: doc.data().paymentStatus });
+        });
+      });
+
+    res.json({ courseName, users });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 function getRandomString() {
   var randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   var result = "";
@@ -75,4 +106,4 @@ function getRandomString() {
   return result;
 }
 
-module.exports = { getVerifyId, checkVerifyId, getAllOwner };
+module.exports = { getVerifyId, checkVerifyId, getAllOwner, getAllAttend };
