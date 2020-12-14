@@ -7,21 +7,14 @@ module.exports = async (agent) => {
   try {
     const url = agent.parameters.url;
     const courseName = agent.parameters.courseName;
-    const any = agent.parameters.any;
-    let name;
+
     let courseId;
     let userId = [];
 
-    if (courseName) {
-      name = courseName;
-    } else {
-      name = any;
-    }
-    console.log(name);
     console.log(url);
 
     const courseRef = db.collection("Training Courses");
-    const snapshot = await courseRef.where("courseName", "==", name).get();
+    const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
       courseId = doc.id;
     });
@@ -34,7 +27,7 @@ module.exports = async (agent) => {
     userRef.forEach((doc) => {
       userId.push(doc.data().userId);
     });
-    const msg = linePayload.feedbackFormButton(name, url);
+    const msg = linePayload.feedbackFormButton(courseName, url);
     await multicast(userId, msg);
     agent.add("กระจายแบบสอบถามแล้ว");
   } catch (error) {

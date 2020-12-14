@@ -42,7 +42,7 @@ exports.webhook = async (req, res) => {
   }
 
   const verify = await checkOwnerVerify(events.source.userId);
-  console.log(verify);
+  //console.log(verify);
 
   if (destination == "U4c942e6e783ace694220c4058f5894bd" && verify == false) {
     await reply(channelAccessToken, events.replyToken, [
@@ -57,7 +57,7 @@ exports.webhook = async (req, res) => {
     const sessionId = event.source.groupId || event.source.userId;
     const message = event.message.text;
 
-    console.log("sessionId", sessionId);
+    //console.log("sessionId", sessionId);
 
     const intentResponse = await detectIntent(
       DIALOGFLOW_PROJECTID,
@@ -99,7 +99,7 @@ exports.webhook = async (req, res) => {
     if (data.action === "SEND_CHECK_ATTEND") {
       const courseId = data.courseId;
       const courseName = data.courseName;
-      console.log(courseName);
+      //console.log(courseName);
       sendCheckAttend(courseId, courseName);
       await reply(channelAccessToken, events.replyToken, [
         lineHelper.createTextMessage("ส่งเช็คชื่อเรียบร้อย สามารถเช็คยอดได้ที่ปุ่มเลยนะ"),

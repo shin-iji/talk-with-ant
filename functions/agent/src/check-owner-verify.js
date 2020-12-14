@@ -2,11 +2,11 @@ const { db } = require("../../database/database");
 
 exports.checkOwnerVerify = async (ownerId) => {
   try {
-    const ownerRef = db.collection("Owner");
+    const ownerRef = db.collection("Owners");
     let verify;
 
     await ownerRef
-      .where("id", "==", ownerId)
+      .where("ownerId", "==", ownerId)
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {

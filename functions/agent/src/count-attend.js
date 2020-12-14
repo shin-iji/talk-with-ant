@@ -1,4 +1,3 @@
-const { all } = require("../../api/api");
 const { db } = require("../../database/database");
 
 exports.countAttend = async (courseId) => {
