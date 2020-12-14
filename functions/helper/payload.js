@@ -1411,7 +1411,7 @@ module.exports = {
                   action: {
                     type: "uri",
                     label: "เริ่มสร้าง",
-                    uri: "https://liff.line.me/1654987039-3lvl9O4p",
+                    uri: "https://liff.line.me/1654378227-YyWNaWKe",
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -1717,6 +1717,120 @@ module.exports = {
                   type: "message",
                   label: "เริ่มส่งเเบบสอบถาม",
                   text: `ส่งแบบสอบถาม ${courseName}`,
+                },
+                style: "primary",
+                color: "#FF783E",
+              },
+            ],
+          },
+        ],
+        offsetTop: "none",
+        paddingTop: "none",
+      },
+      styles: {
+        footer: {
+          separator: true,
+        },
+      },
+    };
+  },
+  listHistory: (courseName, date) => {
+    return {
+      type: "bubble",
+      size: "kilo",
+      hero: {
+        type: "image",
+        url: `https://storage.googleapis.com/antv2-xdbgna.appspot.com/${courseName
+          .split(" ")
+          .join("_")}`,
+        size: "full",
+        aspectMode: "fit",
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "box",
+            layout: "horizontal",
+            contents: [
+              {
+                type: "text",
+                text: `${courseName}: `,
+                size: "sm",
+              },
+              {
+                type: "text",
+                text: `${date}`,
+                align: "end",
+                size: "sm",
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        footer: {
+          separator: false,
+        },
+      },
+    };
+  },
+  listAttend: (courseId, courseName) => {
+    return {
+      type: "bubble",
+      header: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "PARTICIPANTS",
+            size: "sm",
+            color: "#FF783E",
+            weight: "bold",
+          },
+        ],
+        offsetTop: "none",
+        offsetBottom: "none",
+        offsetStart: "none",
+        offsetEnd: "none",
+        paddingBottom: "none",
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: `${courseName}`,
+            weight: "bold",
+            size: "xxl",
+            margin: "md",
+          },
+          {
+            type: "text",
+            text: "Training with ant",
+            size: "xs",
+            color: "#aaaaaa",
+            wrap: true,
+          },
+          {
+            type: "separator",
+            margin: "xxl",
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            margin: "xxl",
+            spacing: "sm",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "ดูรายชื่อผู้สมัคร",
+                  uri: `https://liff.line.me/1654378227-RVWaLWb5?courseId=${courseId}`,
                 },
                 style: "primary",
                 color: "#FF783E",
