@@ -37,17 +37,26 @@ module.exports = async (agent) => {
     let courseId;
     let amount;
     let avaiPar;
+    let date;
 
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
     snapshot.forEach((doc) => {
       courseId = doc.id;
       amount = doc.data().amount;
       avaiPar = doc.data().avaiPar;
+      date = doc.data().date;
     });
 
     await courseRef.doc(`${courseId}`).update({ avaiPar: avaiPar - 1 });
 
     await courseRef.doc(`${courseId}`).collection("users").doc().set(data);
+
+    await db
+      .collection("Users")
+      .doc(`${userId}`)
+      .collection("history")
+      .doc()
+      .set({ courseName, date });
 
     let orderId;
 
