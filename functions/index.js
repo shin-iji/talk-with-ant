@@ -29,6 +29,9 @@ const askMulticastCourse = require("./function_handler_owner/ask-multicast-cours
 const createCourseForm = require("./function_handler_owner/create-course");
 const sendFeedback = require("./function_handler_owner/send-feedback");
 const askMulticastFeedback = require("./function_handler_owner/ask-multicast-feedback");
+const history = require("./function_handler/history");
+const ownerHistory = require("./function_handler_owner/history");
+const listParticipant = require("./function_handler_owner/list-attend");
 
 const test = require("./function_handler/test");
 
@@ -47,6 +50,7 @@ exports.antDialogflowFulfillment = functions.https.onRequest((request, response)
   intentMap.set("Register", checkUserData);
   intentMap.set("Register - yes", register);
   intentMap.set("Register - no", registerForm);
+  intentMap.set("History", history);
   intentMap.set("Test", test);
 
   //Payment
@@ -68,6 +72,8 @@ exports.antOwnerDialogflowFulfillment = functions.https.onRequest((request, resp
   intentMap.set("Create course", createCourseForm);
   intentMap.set("Feedback", askMulticastFeedback);
   intentMap.set("Send Feedback", sendFeedback);
+  intentMap.set("History", ownerHistory);
+  intentMap.set("List Participant", listParticipant);
   agent.handleRequest(intentMap);
 });
 
