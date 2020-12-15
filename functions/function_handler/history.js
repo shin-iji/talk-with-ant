@@ -28,6 +28,42 @@ module.exports = async (agent) => {
     });
 
     const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
+    payloadJson.quickReply = {
+      items: [
+        {
+          action: {
+            label: "รายการอบรม",
+            type: "message",
+            text: "รายการอบรม",
+          },
+          type: "action",
+        },
+        {
+          type: "action",
+          action: {
+            type: "message",
+            text: "รายการที่ต้องจ่าย",
+            label: "รายการที่ต้องจ่าย",
+          },
+        },
+        {
+          type: "action",
+          action: {
+            type: "message",
+            text: "ประวัติการสร้าง",
+            label: "ประวัติการสร้าง",
+          },
+        },
+        {
+          type: "action",
+          action: {
+            type: "message",
+            text: "ช่วยเหลือ",
+            label: "ช่วยเหลือ",
+          },
+        },
+      ],
+    };
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
     agent.add("คอร์สทั้งหมดที่คุณเคยสมัครไปแล้วนะ");
     agent.add(payload);
