@@ -2,7 +2,7 @@ const { db } = require("../../database/database");
 const { push } = require("../../helper/push");
 const lineHelper = require("../../helper/line-helper");
 
-exports.checkAttend = async (channelAccessToken, userId, courseId) => {
+exports.checkAttend = async (userId, courseId) => {
   let orderId;
   let checkAttend;
   const userRef = db.collection(`Training Courses/${courseId}/users`);
@@ -13,9 +13,9 @@ exports.checkAttend = async (channelAccessToken, userId, courseId) => {
   });
 
   if (checkAttend === true) {
-    await push(channelAccessToken, userId, lineHelper.createTextMessage("คุณเช็คชื่อไปแล้วนะ"));
+    return true;
   } else {
-    const editAttend = await userRef.doc(`${orderId}`).update({ checkAttend: true });
-    await push(channelAccessToken, userId, lineHelper.createTextMessage("เช็คชื่อเรียบร้อย"));
+    await userRef.doc(`${orderId}`).update({ checkAttend: true });
+    return false;
   }
 };

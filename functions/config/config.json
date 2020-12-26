@@ -8,5 +8,5 @@
         "channelId": "1654912865",
         "channelSecret": "4cf844fca2261141c5a08dab5227a903"
     },
-    "apiUrl": "https://us-central1-antv2-xdbgna.cloudfunctions.net/confirmPayment"
+    "apiUrl": "https://talk-with-ant-qv5fvdpzmq-de.a.run.app/confirmPayment"
 }

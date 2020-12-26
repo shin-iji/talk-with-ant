@@ -7,8 +7,6 @@ module.exports = async (agent) => {
     const courseName = agent.parameters.courseName;
     const courseRef = db.collection("Training Courses");
 
-    console.log(courseName);
-
     const snapshot = await courseRef.where("courseName", "==", courseName).get();
 
     let payloadJson;

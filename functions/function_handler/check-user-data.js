@@ -40,7 +40,7 @@ module.exports = async (agent) => {
         const userColleRef = await db.collection("Users").doc(`${userId}`).get();
 
         if (userColleRef.data() === undefined) {
-          let payloadJson = linePayload.formButton(courseName, courseId);
+          let payloadJson = linePayload.registerFormButton(courseName, courseId);
           let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
           agent.add(payload);
         } else {

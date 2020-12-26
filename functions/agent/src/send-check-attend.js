@@ -4,6 +4,7 @@ const linePayload = require("../../helper/payload");
 
 exports.sendCheckAttend = async (courseId, courseName) => {
   const userId = [];
+  const courseRef = db.collection("Training Courses").doc(`${courseId}`);
   const userRef = db.collection(`Training Courses/${courseId}/users`);
 
   const snapshot = await userRef.where("paymentStatus", "==", "paid").get();
@@ -12,5 +13,13 @@ exports.sendCheckAttend = async (courseId, courseName) => {
     //console.log(doc.id);
   });
 
-  await multicast(userId, linePayload.checkAttend(courseId, courseName));
+  const checkAttend = await courseRef.get();
+
+  if (checkAttend.data().checkAttend === true) {
+    return true;
+  } else {
+    await courseRef.update({ checkAttend: true });
+    await multicast(userId, linePayload.checkAttend(courseId, courseName));
+    return false;
+  }
 };

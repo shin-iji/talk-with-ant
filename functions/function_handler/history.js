@@ -14,6 +14,7 @@ module.exports = async (agent) => {
     await userRef
       .doc(`${userId}`)
       .collection("history")
+      .orderBy("date", "asc")
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
@@ -27,47 +28,53 @@ module.exports = async (agent) => {
       contents.push(linePayload.listHistory(course.courseName, course.date));
     });
 
-    const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
-    payloadJson.quickReply = {
-      items: [
-        {
-          action: {
-            label: "รายการอบรม",
-            type: "message",
-            text: "รายการอบรม",
+    if (!Array.isArray(contents) || !contents.length) {
+      const payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add("คุณยังไม่เคยสมัครคอร์สอะไรนะ");
+      agent.add(payload);
+    } else {
+      const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
+      payloadJson.quickReply = {
+        items: [
+          {
+            action: {
+              label: "รายการอบรม",
+              type: "message",
+              text: "รายการอบรม",
+            },
+            type: "action",
           },
-          type: "action",
-        },
-        {
-          type: "action",
-          action: {
-            type: "message",
-            text: "รายการที่ต้องจ่าย",
-            label: "รายการที่ต้องจ่าย",
+          {
+            type: "action",
+            action: {
+              type: "message",
+              text: "รายการที่ต้องจ่าย",
+              label: "รายการที่ต้องจ่าย",
+            },
           },
-        },
-        {
-          type: "action",
-          action: {
-            type: "message",
-            text: "ประวัติการสร้าง",
-            label: "ประวัติการสร้าง",
+          {
+            type: "action",
+            action: {
+              type: "message",
+              text: "ประวัติการสมัคร",
+              label: "ประวัติการสมัคร",
+            },
           },
-        },
-        {
-          type: "action",
-          action: {
-            type: "message",
-            text: "ช่วยเหลือ",
-            label: "ช่วยเหลือ",
+          {
+            type: "action",
+            action: {
+              type: "message",
+              text: "ช่วยเหลือ",
+              label: "ช่วยเหลือ",
+            },
           },
-        },
-      ],
-    };
-    let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-    agent.add("คอร์สทั้งหมดที่คุณเคยสมัครไปแล้วนะ");
-    agent.add(payload);
-
+        ],
+      };
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add("คอร์สทั้งหมดที่คุณเคยสมัครไปแล้วนะ");
+      agent.add(payload);
+    }
     //agent.add("test");
   } catch (error) {
     console.log(error);

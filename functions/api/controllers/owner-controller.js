@@ -73,12 +73,14 @@ const getAllAttend = async (req, res) => {
     const courseRef = db.collection("Training Courses");
     const users = [];
     let courseName;
+    let checkAttend;
 
     await courseRef
       .doc(`${courseId}`)
       .get()
       .then((doc) => {
         courseName = doc.data().courseName;
+        checkAttend = doc.data().checkAttend;
       });
 
     await courseRef
@@ -87,11 +89,15 @@ const getAllAttend = async (req, res) => {
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          users.push({ name: doc.data().name, status: doc.data().paymentStatus });
+          users.push({
+            name: doc.data().name,
+            status: doc.data().paymentStatus,
+            checkAttend: doc.data().checkAttend,
+          });
         });
       });
 
-    res.json({ courseName, users });
+    res.json({ courseName, checkAttend, users });
   } catch (error) {
     console.log(error);
   }

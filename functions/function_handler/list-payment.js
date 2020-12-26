@@ -30,7 +30,10 @@ module.exports = async (agent) => {
     });
 
     if (!Array.isArray(pendingPayments) || !pendingPayments.length) {
-      agent.add("ไม่มีคอร์สที่ต้องจ่ายจ้า");
+      const payloadJson = linePayload.askTodoAnything();
+      let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
+      agent.add("ไม่มีคอร์สที่ต้องจ่ายนะ");
+      agent.add(payload);
     } else {
       const payloadJson = lineHelper.createFlexCarouselMessage("List Payment", pendingPayments);
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });

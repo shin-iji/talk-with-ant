@@ -278,7 +278,6 @@ module.exports = {
         items: [
           {
             type: "action",
-            //imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
             action: {
               type: "message",
               label: "รายการอบรม",
@@ -287,11 +286,26 @@ module.exports = {
           },
           {
             type: "action",
-            //imageUrl: "https://cdn1.iconfinder.com/data/icons/mix-color-3/502/Untitled-1-512.png",
             action: {
               type: "message",
               label: "รายการที่ต้องจ่าย",
               text: "รายการที่ต้องจ่าย",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ประวัติการสมัคร",
+              text: "ประวัติการสมัคร",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ช่วยเหลือ",
+              text: "ช่วยเหลือ",
             },
           },
         ],
@@ -329,7 +343,7 @@ module.exports = {
             type: "postback",
             label: "action",
             data: `action=${actionType.CHECK_ATTEND}&courseId=${courseId}`,
-            displayText: "เช็คชื่อ",
+            displayText: `เช็คชื่อ ${courseName}`,
           },
         },
         body: {
@@ -547,10 +561,9 @@ module.exports = {
                 {
                   type: "button",
                   action: {
-                    type: "postback",
-                    label: "นับยอดผู้เข้าร่วม",
-                    data: `action=${actionType.COUNT_ATTEND}&courseId=${courseId}`,
-                    displayText: "นับยอดผู้เข้าร่วม",
+                    type: "uri",
+                    label: "ดูรายชื่อผู้เข้าร่วม",
+                    uri: `https://liff.line.me/1654378227-RVWaLWb5?courseId=${courseId}`,
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -841,7 +854,7 @@ module.exports = {
           contents: [
             {
               type: "text",
-              text: "Attendee Registered",
+              text: "Trainee Registered",
               weight: "bold",
               color: "#FF783E",
             },
@@ -1658,6 +1671,22 @@ module.exports = {
               type: "message",
             },
           },
+          {
+            type: "action",
+            action: {
+              label: "รายชื่อผู้สมัคร",
+              text: "รายชื่อผู้สมัคร",
+              type: "message",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              label: "ประวัติการสร้าง",
+              text: "ประวัติการสร้าง",
+              type: "message",
+            },
+          },
         ],
       },
     };
@@ -1730,6 +1759,66 @@ module.exports = {
       styles: {
         footer: {
           separator: true,
+        },
+      },
+    };
+  },
+  listHistoryOwner: (courseId, courseName, date) => {
+    return {
+      type: "bubble",
+      size: "kilo",
+      hero: {
+        type: "image",
+        url: `https://storage.googleapis.com/antv2-xdbgna.appspot.com/${courseName
+          .split(" ")
+          .join("_")}`,
+        size: "full",
+        aspectMode: "fit",
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "box",
+            layout: "horizontal",
+            contents: [
+              {
+                type: "text",
+                text: `${courseName}: `,
+                size: "sm",
+              },
+              {
+                type: "text",
+                text: `${date}`,
+                align: "end",
+                size: "sm",
+              },
+            ],
+          },
+          {
+            type: "box",
+            layout: "vertical",
+            margin: "xxl",
+            spacing: "sm",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "ดูรายชื่อผู้สมัคร",
+                  uri: `https://liff.line.me/1654378227-RVWaLWb5?courseId=${courseId}`,
+                },
+                style: "primary",
+                color: "#FF783E",
+              },
+            ],
+          },
+        ],
+      },
+      styles: {
+        footer: {
+          separator: false,
         },
       },
     };

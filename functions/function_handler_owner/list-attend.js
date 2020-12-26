@@ -31,12 +31,56 @@ module.exports = async (agent) => {
     }
 
     if (!Array.isArray(contents) || !contents.length) {
-      const payloadJson = linePayload.askTodoAnything();
+      const payloadJson = linePayload.askTodoAnythingOwner();
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add("ไม่มีคอร์สจ้า");
       agent.add(payload);
     } else {
       const payloadJson = lineHelper.createFlexCarouselMessage("List Course Participant", contents);
+      payloadJson.quickReply = {
+        items: [
+          {
+            type: "action",
+            action: {
+              text: "สร้างคอร์ส",
+              type: "message",
+              label: "สร้างคอร์ส",
+            },
+          },
+          {
+            action: {
+              label: "เช็คชื่อ",
+              type: "message",
+              text: "เช็คชื่อ",
+            },
+            type: "action",
+          },
+          {
+            type: "action",
+            action: {
+              label: "ส่งแบบสอบถาม",
+              text: "ส่งแบบสอบถาม",
+              type: "message",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              label: "รายชื่อผู้สมัคร",
+              text: "รายชื่อผู้สมัคร",
+              type: "message",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              label: "ประวัติการสร้าง",
+              text: "ประวัติการสร้าง",
+              type: "message",
+            },
+          },
+        ],
+      };
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add("ต้องการดูรายชื่อผู้เข้าสมัครคอร์สไหน เลือกได้เลยนะ");
       agent.add(payload);

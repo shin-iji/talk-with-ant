@@ -44,9 +44,14 @@ exports.webhook = async (req, res) => {
   const verify = await checkOwnerVerify(events.source.userId);
   //console.log(verify);
 
-  if (destination == "U4c942e6e783ace694220c4058f5894bd" && verify == false) {
+  if (
+    (destination == "U4c942e6e783ace694220c4058f5894bd" && verify == false) ||
+    (destination == "U4c942e6e783ace694220c4058f5894bd" && verify == undefined)
+  ) {
     await reply(channelAccessToken, events.replyToken, [
-      lineHelper.createTextMessage("รบกวนยืนยันตัวตนก่อนใช้งานด้วยนะ"),
+      lineHelper.createTextMessage(
+        "รบกวนยืนยันตัวตนก่อนใช้งานผ่านลิงค์นี้ https://liff.line.me/1654378227-bePl7PNo"
+      ),
     ]);
     //return;
   }
@@ -100,17 +105,34 @@ exports.webhook = async (req, res) => {
       const courseId = data.courseId;
       const courseName = data.courseName;
       //console.log(courseName);
-      sendCheckAttend(courseId, courseName);
-      await reply(channelAccessToken, events.replyToken, [
-        lineHelper.createTextMessage("ส่งเช็คชื่อเรียบร้อย สามารถเช็คยอดได้ที่ปุ่มเลยนะ"),
-        linePayload.countAttend(courseId, courseName),
-      ]);
+      const checkAttend = await sendCheckAttend(courseId, courseName);
+      if (checkAttend === true) {
+        await reply(channelAccessToken, events.replyToken, [
+          lineHelper.createTextMessage("คอร์สนี้ทำการเช็คชื่อไปแล้วนะ"),
+          linePayload.askTodoAnythingOwner(),
+        ]);
+      } else {
+        await reply(channelAccessToken, events.replyToken, [
+          lineHelper.createTextMessage("ส่งเช็คชื่อเรียบร้อย สามารถดูรายชื่อได้ที่ปุ่มเลยนะ"),
+          linePayload.countAttend(courseId, courseName),
+        ]);
+      }
     }
 
     if (data.action === "CHECK_ATTEND") {
       const userId = events.source.userId;
       const courseId = data.courseId;
-      checkAttend(channelAccessToken, userId, courseId);
+      const check = await checkAttend(userId, courseId);
+
+      if (check === true) {
+        await reply(channelAccessToken, events.replyToken, [
+          lineHelper.createTextMessage("คุณเช็คชื่อไปแล้วนะ"),
+        ]);
+      } else {
+        await reply(channelAccessToken, events.replyToken, [
+          lineHelper.createTextMessage("เช็คชื่อเรียบร้อย"),
+        ]);
+      }
     }
 
     if (data.action === "COUNT_ATTEND") {

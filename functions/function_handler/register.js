@@ -32,6 +32,7 @@ module.exports = async (agent) => {
       email: userColleRef.data().email,
       timestamp: timestamp,
       checkAttend: false,
+      paymentStatus: "pending",
     };
 
     let courseId;
@@ -60,7 +61,7 @@ module.exports = async (agent) => {
 
     let orderId;
 
-    courseRef
+    await courseRef
       .doc(`${courseId}`)
       .collection("users")
       .where("userId", "==", userId)
@@ -70,7 +71,7 @@ module.exports = async (agent) => {
           orderId = doc.id;
         });
       });
-
+    //console.log("orderId" + orderId);
     const ownerId = await getOwnerId(courseName);
     const userInfo = await sendUserInfo(courseName, orderId);
     const userRef = courseRef.doc(`${courseId}`).collection("users");

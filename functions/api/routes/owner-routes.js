@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const ownerController = require("../controllers/owner-controller");
-const { route } = require("./routes");
 
 router.route("/verify").post(ownerController.checkVerifyId);
 

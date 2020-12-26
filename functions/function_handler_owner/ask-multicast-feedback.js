@@ -43,12 +43,11 @@ module.exports = async (agent) => {
       if (!Array.isArray(contents) || !contents.length) {
         const payloadJson = linePayload.askTodoAnythingOwner();
         let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        agent.add("ดูเหมือนคุณจะไม่มีคอร์สในช่วงนี้เลยนะ");
+        agent.add("ดูเหมือนคุณจะไม่มีคอร์สในช่วงนี้เลยนะ"); 
         agent.add(payload);
       } else {
         const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);
         let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-        //console.log(payloadJson);
         agent.add("ไม่พบคอร์สที่ตรงกับวันนี้นะ แต่สามารถเลือกได้จากรายการนี้เลยนะ");
         agent.add(payload);
       }

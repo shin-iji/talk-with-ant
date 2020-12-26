@@ -60,7 +60,7 @@ module.exports = async (agent) => {
     if (!Array.isArray(contents) || !contents.length) {
       const payloadJson = linePayload.askTodoAnything();
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
-      agent.add("ไม่มีคอร์สจ้า");
+      agent.add("ดูเหมือนช่วงนี้จะไม่มีคอร์สนะ");
       agent.add(payload);
     } else {
       const payloadJson = lineHelper.createFlexCarouselMessage("List Course", contents);

@@ -1,7 +1,7 @@
 const { db, storage } = require("../../database/database");
 const { updateEntity } = require("../../helper/update-entity");
 const { updateEntityOwner } = require("../../helper/update-entity-owner");
-const bucket = storage.bucket();
+const bucket = storage.bucket("antv2-xdbgna.appspot.com");
 
 const getAllCourses = async (req, res) => {
   try {
@@ -47,11 +47,12 @@ const createCourse = async (req, res, next) => {
 
     const newDate = new Date(date);
 
+    //console.log(req.body);
     await updateEntity(courseName);
     await updateEntityOwner(courseName);
 
     const file = req.files[0];
-
+    //console.log(file);
     const fileName = `${courseName.split(" ").join("_")}`;
     const fileUpload = bucket.file(fileName);
     const blobStream = fileUpload.createWriteStream({
@@ -82,6 +83,7 @@ const createCourse = async (req, res, next) => {
       trainerName,
       maxPar: Number(maxPar),
       avaiPar: Number(maxPar),
+      checkAttend: false,
     };
 
     const courseRef = await db.collection("Training Courses").doc().set(data);

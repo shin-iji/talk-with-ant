@@ -1,8 +1,14 @@
-const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 
-admin.initializeApp(functions.config().firebase);
+const serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://antv2-xdbgna.firebaseio.com",
+});
+
 const db = admin.firestore();
 const storage = admin.storage();
+const rtDb = admin.database();
 
-module.exports = { db, storage };
+module.exports = { db, storage, rtDb };

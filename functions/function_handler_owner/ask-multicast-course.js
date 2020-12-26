@@ -9,10 +9,13 @@ module.exports = async (agent) => {
     let courseId;
 
     const courseRef = db.collection("Training Courses");
-    const snapshot = await courseRef.where("courseName", "<=", courseName).get();
-    snapshot.forEach((doc) => {
-      courseId = doc.id;
-    });
+
+    while (courseId === undefined) {
+      const snapshot = await courseRef.where("courseName", "==", courseName).get();
+      snapshot.forEach((doc) => {
+        courseId = doc.id;
+      });
+    }
 
     const payloadJson = linePayload.askMulticastCourse(courseId);
     let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });

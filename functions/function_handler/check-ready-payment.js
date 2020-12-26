@@ -39,13 +39,15 @@ module.exports = async (agent) => {
     const ownerId = await getOwnerId(courseName);
     const userInfo = await sendUserInfo(courseName, orderId);
 
-    if (amount === undefined) {
-      await userRef.doc(`${orderId}`).update({ paymentStatus: true });
+    if (amount === undefined || amount === "0" || amount === 0) {
+      await userRef.doc(`${orderId}`).update({ paymentStatus: "paid" });
       push(channelAccessToken, ownerId, userInfo);
+      agent.add("สมัครเสร็จแล้ว");
       let payloadJson = linePayload.askTodoAnything();
       let payload = new Payload(`LINE`, payloadJson, { sendAsMessage: true });
       agent.add(payload);
     } else {
+      await userRef.doc(`${orderId}`).update({ paymentStatus: "pending" });
       agent.add("รอสักครู่..");
       await linepay.reservePayment(courseName, amount, orderId, userId);
     }

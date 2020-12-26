@@ -13,9 +13,11 @@ exports.convertStruct = async (intentResponse) => {
     } else if (messageObj.message === "payload") {
       if (messageObj.platform === "LINE") {
         struct = messageObj.payload.fields.line.structValue;
+        //console.log(struct);
         return structjson.structProtoToJson(struct);
       } else {
         struct = messageObj.payload;
+        //console.log(struct);
         return structjson.structProtoToJson(struct);
       }
     }

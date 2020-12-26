@@ -69,7 +69,8 @@ exports.updateEntityOwner = async (courseName) => {
     if (courseName) {
       return await getEntitiesList()
         .then(async (entityList) => {
-          let courses = entityList[0][0];
+          let courses = entityList[0][1];
+          //console.log(courses);
           await insertIfNewProgramAdded(courses, courseName);
         })
         .catch((err) => console.log(err));

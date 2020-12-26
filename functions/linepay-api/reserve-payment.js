@@ -16,7 +16,7 @@ exports.reservePayment = async (courseName, amount, orderId, userId) => {
     orderId: orderId,
     currency: "THB",
     confirmUrl: `${config.apiUrl}`,
-    //confirmUrl: `https://9aacd94cbfaf.ngrok.io/antv2-xdbgna/us-central1/confirmPayment`,
+    //confirmUrl: `https://9922a19c6a3f.ngrok.io/confirmPayment`,
     langCd: "th",
     confirmUrlType: "SERVER",
   };

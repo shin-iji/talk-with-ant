@@ -54,6 +54,7 @@ module.exports = async (req, res) => {
             ]);
             data.status = "paid";
             saveTx(orderId, data);
+            changePaymentStatus(data.productName, data.userId);
             push(channelAccessToken, ownerId, userInfo);
             line.pushMessage(data.userId, linePayload.askTodoAnything());
           }
@@ -90,4 +91,33 @@ async function getOrderInfo(orderId) {
   });
 
   return list[0];
+}
+
+async function changePaymentStatus(courseName, userId) {
+  let courseId;
+  let userDocId;
+  const courseRef = db.collection("Training Courses");
+  await courseRef
+    .where("courseName", "==", courseName)
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        courseId = doc.id;
+      });
+    });
+  await courseRef
+    .doc(`${courseId}`)
+    .collection("users")
+    .where("userId", "==", userId)
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        userDocId = doc.id;
+      });
+    });
+  await courseRef
+    .doc(`${courseId}`)
+    .collection("users")
+    .doc(`${userDocId}`)
+    .update({ paymentStatus: "paid" });
 }
