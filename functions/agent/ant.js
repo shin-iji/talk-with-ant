@@ -50,7 +50,7 @@ exports.webhook = async (req, res) => {
   ) {
     await reply(channelAccessToken, events.replyToken, [
       lineHelper.createTextMessage(
-        "รบกวนยืนยันตัวตนก่อนใช้งานผ่านลิงค์นี้ https://liff.line.me/1654378227-bePl7PNo"
+        "รบกวนยืนยันตัวตนก่อนใช้งานผ่านลิงค์นี้ https://liff.line.me/1655424277-LlqGOZJG"
       ),
     ]);
     //return;

@@ -1234,7 +1234,7 @@ module.exports = {
                   action: {
                     type: "uri",
                     label: "สมัคร",
-                    uri: `https://liff.line.me/1654378227-QwAzgAb0/enrollcourse?courseId=${courseId}`,
+                    uri: `https://liff.line.me/1655424277-pxLGOaAG/enrollcourse?courseId=${courseId}`,
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -1424,7 +1424,7 @@ module.exports = {
                   action: {
                     type: "uri",
                     label: "เริ่มสร้าง",
-                    uri: "https://liff.line.me/1654378227-YyWNaWKe",
+                    uri: "https://liff.line.me/1655424277-grmVQB2V",
                   },
                   style: "primary",
                   color: "#FF783E",
@@ -1919,7 +1919,7 @@ module.exports = {
                 action: {
                   type: "uri",
                   label: "ดูรายชื่อผู้สมัคร",
-                  uri: `https://liff.line.me/1654378227-RVWaLWb5?courseId=${courseId}`,
+                  uri: `https://liff.line.me/1655424277-LlqGOZJG?courseId=${courseId}`,
                 },
                 style: "primary",
                 color: "#FF783E",
