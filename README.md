@@ -52,9 +52,13 @@ https://xxxxxx.ngrok.io/{project Id}/{region}/{function name}
 - `GET /courses` get all courses
 - `GET /courses/:id` get course by id
 - `POST /courses` create course
-- `DELETE /courses/:id` delete courses by id
+
 ##### User
 - `POST /courses/:id/users` create user by course id
+
+##### Admin
+- `GET /verify` get veridy id 
+- `GET /owner` get all owners
 
 
 ## Deployment
